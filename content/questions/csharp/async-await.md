@@ -1,15 +1,15 @@
 ---
+id: question.async-await
 title: Async vs Await
 slug: async-await
 difficulty: Medium
-category: C#
+category: category.csharp
+topic: topic.async-programming
 tags:
-  - async
-  - task
-  - threading
+  - interview-classic
+  - pitfall
 companies:
-  - Microsoft
-  - Stack Overflow
+  - company.microsoft
 estimated_time: 10
 updated: 2026-07-31
 ---
@@ -22,27 +22,22 @@ Explain async/await in C#.
 
 # Expected Answer
 
-`async` and `await` are keywords in C# used to simplify asynchronous programming. 
-They allow you to write code that looks synchronous but executes asynchronously, 
-preventing the UI thread from freezing and improving application responsiveness.
+`async` and `await` are keywords in C# used to simplify asynchronous programming...
 
 ---
 
 # Common Mistakes
 
-- Forgetting to use `await` on an async method, which causes the method to return a `Task` instead of the result.
-- Using `async void` for anything other than event handlers.
-- Blocking on async code using `.Result` or `.Wait()`.
+- Forgetting to use `await` on an async method...
 
 ---
 
 # Follow-up Questions
 
 - What is the difference between `Task` and `ValueTask`?
-- How does `ConfigureAwait(false)` work?
 
 ---
 
 # References
 
-- [Microsoft Docs: Asynchronous programming with async and await](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
+- [Microsoft Docs](https://docs.microsoft.com)
