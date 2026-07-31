@@ -1,33 +1,28 @@
 # QuestionForge - Gemini CLI Instructions
 
-You are an expert software engineer working on **QuestionForge**, an open-source interview knowledge base.
+You are an expert software engineer working on **QuestionForge**.
 
 ## Core Mandates
-* **Static First:** QuestionForge is a static site. No backend, no APIs, no databases. Git is the database.
-* **Stable IDs:** Use stable IDs for all entities (e.g., `id: question.async-await`). Relationships MUST use these IDs. Slugs are for URLs only.
-* **Hierarchy:** 
-    * `Category` (High-level navigation, e.g., C#)
-    * `Topic` (Curated grouping, e.g., Async Programming)
-    * `Tags` (Lightweight metadata, e.g., performance, beginner)
-* **Referential Integrity:** The build MUST fail if a question references a non-existent Category, Topic, or Company.
-* **Content First-Class Entities:** Categories, Topics, and Companies have their own Markdown files in `content/`.
+* **Static First:** No backend, no APIs. Git is the database.
+* **Stable IDs:** Use stable IDs (e.g., `id: question.async-await`). **NEVER** use slugs for relationships; slugs are for URLs only.
+* **Referential Integrity:** The build/validation MUST fail if any ID reference is broken.
+* **DRY Architecture:**
+    * **Concepts:** Use for reusable technical explanations.
+    * **Questions:** Use for the interview prompt itself.
+    * **Variants:** Use for technology-specific answers (e.g., .NET vs Python implementation).
 
-## Architecture
-* **Apps:** The main website is located in `apps/website`.
-* **Content Collections:**
-    * `content/categories/`: `id: category.<name>`
-    * `content/topics/`: `id: topic.<name>`, references a category ID.
-    * `content/companies/`: `id: company.<name>`
-    * `content/questions/`: `id: question.<name>`, references category, topic, and company IDs.
-    * `content/learning-paths/`: References questions and topics.
+## Content Modeling Strategy
+When adding content:
+1.  **Identify the Category/Topic/Tech:** Ensure they exist or create them.
+2.  **Concept vs Question:** If the info is a reusable explanation, put it in `concepts/`. If it's a specific prompt, put it in `questions/`.
+3.  **Variant Creation:** If a question has different answers for different stacks (e.g., "How do you handle DI?"), create a generic `question/` and multiple `variants/`.
 
-## Validation Standards (scripts/validate.js)
-* **Unique IDs & Slugs:** Fail on duplicates.
-* **Valid Relations:** All ID references must exist.
-* **Structure:** Questions must have required sections: Question, Expected Answer, Common Mistakes, Follow-up Questions, References.
-* **Difficulty:** Must be one of: Beginner, Easy, Medium, Hard, Expert.
+## Architecture & Validation
+* **Astro:** Use `content.config.ts` for schema enforcement.
+* **Scripts:** `scripts/validate.js` is the source of truth for referential integrity across collections.
+* **Directory Structure:**
+    * `content/categories/`, `content/technologies/`, `content/topics/`, `content/concepts/`, `content/questions/`, `content/variants/`, `content/companies/`.
 
-## Tech Stack
-* Astro, React, TypeScript, Tailwind CSS.
-* Use Astro Content Collections with the `glob` loader.
-* Use `pagefind` for search.
+## Quality Standards
+* Every `variant/` must include: `Expected Answer`, `Common Mistakes`, and `Follow-up Questions`.
+* Difficulty levels: `Beginner`, `Easy`, `Medium`, `Hard`, `Expert`.

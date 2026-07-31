@@ -5,9 +5,12 @@ const matter = require('gray-matter');
 const BASE_CONTENT_DIR = path.join(__dirname, '../content');
 const COLLECTIONS = {
     categories: { dir: 'categories', required: ['id', 'title', 'slug'] },
+    technologies: { dir: 'technologies', required: ['id', 'name', 'slug', 'category'] },
     topics: { dir: 'topics', required: ['id', 'title', 'slug', 'category'] },
+    concepts: { dir: 'concepts', required: ['id', 'title', 'slug', 'topic'] },
     companies: { dir: 'companies', required: ['id', 'name', 'slug'] },
-    questions: { dir: 'questions', required: ['id', 'title', 'slug', 'difficulty', 'category', 'topic', 'companies'] }
+    questions: { dir: 'questions', required: ['id', 'title', 'slug', 'difficulty', 'topic', 'companies'] },
+    variants: { dir: 'variants', required: ['id', 'question', 'technology'] }
 };
 
 function walk(dir) {
@@ -61,7 +64,7 @@ function validate() {
                 registry.ids.add(data.id);
             }
 
-            // Check Unique Slug within collection
+            // Check Unique Slug within collection (if applicable)
             if (data.slug) {
                 if (registry.slugs.get(key).has(data.slug)) {
                     errors.push(`${relativePath}: Duplicate slug in ${key}: ${data.slug}`);
@@ -74,18 +77,29 @@ function validate() {
     }
 
     // 2. Check Referential Integrity
-    // Check Topics -> Categories
+    // Tech -> Category
+    registry.data.technologies.forEach(item => {
+        if (item.data.category && !registry.ids.has(item.data.category)) {
+            errors.push(`${item.file}: Invalid category reference: ${item.data.category}`);
+        }
+    });
+
+    // Topic -> Category
     registry.data.topics.forEach(item => {
         if (item.data.category && !registry.ids.has(item.data.category)) {
             errors.push(`${item.file}: Invalid category reference: ${item.data.category}`);
         }
     });
 
-    // Check Questions -> Categories, Topics, Companies
-    registry.data.questions.forEach(item => {
-        if (item.data.category && !registry.ids.has(item.data.category)) {
-            errors.push(`${item.file}: Invalid category reference: ${item.data.category}`);
+    // Concept -> Topic
+    registry.data.concepts.forEach(item => {
+        if (item.data.topic && !registry.ids.has(item.data.topic)) {
+            errors.push(`${item.file}: Invalid topic reference: ${item.data.topic}`);
         }
+    });
+
+    // Question -> Topic, Companies, Concepts
+    registry.data.questions.forEach(item => {
         if (item.data.topic && !registry.ids.has(item.data.topic)) {
             errors.push(`${item.file}: Invalid topic reference: ${item.data.topic}`);
         }
@@ -96,6 +110,23 @@ function validate() {
                 }
             });
         }
+        if (Array.isArray(item.data.concepts)) {
+            item.data.concepts.forEach(conceptId => {
+                if (!registry.ids.has(conceptId)) {
+                    errors.push(`${item.file}: Invalid concept reference: ${conceptId}`);
+                }
+            });
+        }
+    });
+
+    // Variant -> Question, Tech
+    registry.data.variants.forEach(item => {
+        if (item.data.question && !registry.ids.has(item.data.question)) {
+            errors.push(`${item.file}: Invalid question reference: ${item.data.question}`);
+        }
+        if (item.data.technology && !registry.ids.has(item.data.technology)) {
+            errors.push(`${item.file}: Invalid technology reference: ${item.data.technology}`);
+        }
     });
 
     if (errors.length > 0) {
@@ -103,7 +134,7 @@ function validate() {
         errors.forEach(err => console.error(` - ${err}`));
         process.exit(1);
     } else {
-        console.log('All content validated successfully (Referential Integrity OK).');
+        console.log('All content validated successfully (Full Referential Integrity OK).');
     }
 }
 

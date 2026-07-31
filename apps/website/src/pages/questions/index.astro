@@ -1,37 +1,52 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 const allQuestions = await getCollection('questions');
+
+// Fetch topics to display names
+const topics = await getCollection('topics');
+const topicMap = new Map(topics.map(t => [t.data.id, t.data]));
 ---
 
 <Layout title="All Questions">
 	<div class="py-8">
-		<h1 class="text-3xl font-bold text-gray-900 mb-8">Interview Questions</h1>
+		<div class="flex justify-between items-center mb-8">
+			<h1 class="text-3xl font-bold text-gray-900">Interview Questions</h1>
+		</div>
 		
 		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{allQuestions.map((question) => (
-				<a href={`/questions/${question.id}`} class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-					<div class="flex justify-between items-start mb-4">
-						<span class={`px-2 py-1 text-xs font-semibold rounded ${
-							question.data.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
-							question.data.difficulty === 'Easy' ? 'bg-blue-100 text-blue-800' :
-							question.data.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-							question.data.difficulty === 'Hard' ? 'bg-orange-100 text-orange-800' :
-							'bg-red-100 text-red-800'
-						}`}>
-							{question.data.difficulty}
-						</span>
-						<span class="text-sm text-gray-500">{question.data.category}</span>
-					</div>
-					<h2 class="text-xl font-bold text-gray-900 mb-2">{question.data.title}</h2>
-					<div class="flex flex-wrap gap-2 mt-4">
-						{question.data.tags.map((tag) => (
-							<span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">{tag}</span>
-						))}
-					</div>
-				</a>
-			))}
+			{allQuestions.map((question) => {
+				const topic = topicMap.get(question.data.topic);
+				return (
+					<a href={`/questions/${question.id}`} class="flex flex-col p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+						<div class="flex justify-between items-start mb-4">
+							<span class={`px-2 py-1 text-xs font-semibold rounded ${
+								question.data.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
+								question.data.difficulty === 'Easy' ? 'bg-blue-100 text-blue-800' :
+								question.data.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+								question.data.difficulty === 'Hard' ? 'bg-orange-100 text-orange-800' :
+								'bg-red-100 text-red-800'
+							}`}>
+								{question.data.difficulty}
+							</span>
+							<span class="text-xs text-gray-500 font-medium uppercase tracking-wider">{topic?.title || 'Unknown Topic'}</span>
+						</div>
+						<h2 class="text-xl font-bold text-gray-900 mb-2 flex-grow">{question.data.title}</h2>
+						
+						<div class="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
+							<span class="text-sm text-gray-500">{question.data.estimated_time} mins</span>
+							<div class="flex -space-x-2">
+								{question.data.companies.slice(0, 3).map((_) => (
+									<div class="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-[10px] font-bold text-gray-400">
+										C
+									</div>
+								))}
+							</div>
+						</div>
+					</a>
+				);
+			})}
 		</div>
 	</div>
 </Layout>
