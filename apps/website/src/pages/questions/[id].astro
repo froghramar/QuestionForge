@@ -1,0 +1,84 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const questions = await getCollection('questions');
+	return questions.map((question) => ({
+		params: { id: question.id },
+		props: { question },
+	}));
+}
+
+const { question } = Astro.props;
+const { Content } = await render(question);
+---
+
+<Layout title={question.data.title}>
+	<article class="max-w-4xl mx-auto py-8">
+		<nav class="flex mb-8 text-sm text-gray-500" aria-label="Breadcrumb">
+			<ol class="flex items-center space-x-2">
+				<li><a href="/" class="hover:text-indigo-600">Home</a></li>
+				<li><span class="mx-2">/</span></li>
+				<li><a href="/questions" class="hover:text-indigo-600">Questions</a></li>
+				<li><span class="mx-2">/</span></li>
+				<li class="font-medium text-gray-900">{question.data.title}</li>
+			</ol>
+		</nav>
+
+		<header class="mb-12">
+			<div class="flex flex-wrap items-center gap-4 mb-6">
+				<span class={`px-3 py-1 text-sm font-semibold rounded ${
+					question.data.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
+					question.data.difficulty === 'Easy' ? 'bg-blue-100 text-blue-800' :
+					question.data.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+					question.data.difficulty === 'Hard' ? 'bg-orange-100 text-orange-800' :
+					'bg-red-100 text-red-800'
+				}`}>
+					{question.data.difficulty}
+				</span>
+				<span class="text-gray-500">Category: <span class="font-medium text-gray-900">{question.data.category}</span></span>
+				<span class="text-gray-500">Time: <span class="font-medium text-gray-900">{question.data.estimated_time} mins</span></span>
+			</div>
+			<h1 class="text-4xl font-extrabold text-gray-900 mb-4">{question.data.title}</h1>
+			<div class="flex flex-wrap gap-2">
+				{question.data.tags.map((tag) => (
+					<span class="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">{tag}</span>
+				))}
+			</div>
+		</header>
+
+		<div class="prose prose-indigo prose-lg max-w-none">
+			<Content />
+		</div>
+
+		<footer class="mt-16 pt-8 border-t border-gray-200">
+			<div class="flex flex-wrap items-center justify-between gap-4">
+				<div>
+					<h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Companies</h3>
+					<div class="mt-2 flex flex-wrap gap-2">
+						{question.data.companies.map((company) => (
+							<span class="text-gray-900 font-medium">{company}</span>
+						))}
+					</div>
+				</div>
+				<div class="text-sm text-gray-500">
+					Last updated: {new Date(question.data.updated).toLocaleDateString()}
+				</div>
+			</div>
+		</footer>
+	</article>
+</Layout>
+
+<style is:global>
+	@reference "../../styles/global.css";
+	.prose h1 { @apply text-3xl font-bold mt-12 mb-6 pb-2 border-b border-gray-100; }
+	.prose h2 { @apply text-2xl font-bold mt-10 mb-4; }
+	.prose p { @apply my-4 leading-relaxed; }
+	.prose ul { @apply list-disc list-inside my-4; }
+	.prose li { @apply my-2; }
+	.prose code { @apply px-1.5 py-0.5 bg-gray-100 rounded text-indigo-600 font-mono text-sm; }
+	.prose pre { @apply p-4 bg-gray-900 text-gray-100 rounded-lg my-6 overflow-x-auto; }
+	.prose pre code { @apply bg-transparent text-gray-100 p-0; }
+	.prose hr { @apply my-12 border-gray-200; }
+</style>
