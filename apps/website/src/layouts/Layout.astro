@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title} | QuestionForge</title>
+	</head>
+	<body class="bg-gray-50 text-gray-900 min-h-screen">
+        <header class="bg-white border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="/" class="text-2xl font-bold text-indigo-600">QuestionForge</a>
+                    </div>
+                    <nav class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="/questions" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Questions</a>
+                        <a href="/topics" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Topics</a>
+                        <a href="/paths" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Learning Paths</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		    <slot />
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <p class="text-center text-gray-500 text-sm">
+                    &copy; {new Date().getFullYear()} QuestionForge. Open Source.
+                </p>
+            </div>
+        </footer>
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>

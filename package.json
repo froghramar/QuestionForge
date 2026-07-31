@@ -1,0 +1,31 @@
+{
+  "name": "questionforge",
+  "version": "1.0.0",
+  "description": "QuestionForge is an open-source interview knowledge base.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "npm run dev --prefix apps/website",
+    "build": "npm run build --prefix apps/website",
+    "preview": "npm run preview --prefix apps/website",
+    "validate": "node scripts/validate.js",
+    "test": "npm run validate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/froghramar/QuestionForge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/froghramar/QuestionForge/issues"
+  },
+  "homepage": "https://github.com/froghramar/QuestionForge#readme",
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  }
+}
