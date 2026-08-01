@@ -62,7 +62,8 @@ function isActive(path: string): boolean {
 
 				<div class="site-header__right">
 					<nav class="site-nav" id="site-nav">
-						<a href="/" class:list={['site-nav__link', { 'site-nav__link--active': isActive('/') }]}>Questions</a>
+						<a href="/" class:list={['site-nav__link', { 'site-nav__link--active': isActive('/') }]}>Home</a>
+						<a href="/questions" class:list={['site-nav__link', { 'site-nav__link--active': isActive('/questions') }]}>Questions</a>
 						<a href="/topics" class:list={['site-nav__link', { 'site-nav__link--active': isActive('/topics') }]}>Topics</a>
 						<a href="/paths" class:list={['site-nav__link', { 'site-nav__link--active': isActive('/paths') }]}>Paths</a>
 						<a href="https://github.com/froghramar/QuestionForge" class="site-nav__link site-nav__link--github" target="_blank" rel="noopener">
