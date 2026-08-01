@@ -7,7 +7,6 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 	const allQuestions = await getCollection('questions');
 	const sortedQuestions = allQuestions.sort((a, b) => {
 		const diffOrder: Record<string, number> = { Beginner: 0, Easy: 1, Medium: 2, Hard: 3, Expert: 4 };
-		// Primary sort: Difficulty, Secondary sort: Updated date
 		const diffCompare = (diffOrder[a.data.difficulty] || 0) - (diffOrder[b.data.difficulty] || 0);
 		if (diffCompare !== 0) return diffCompare;
 		return new Date(b.data.updated).getTime() - new Date(a.data.updated).getTime();
@@ -26,14 +25,12 @@ const { page } = Astro.props;
 const questions = page.data;
 
 const allTopics = await getCollection('topics');
-const allCategories = await getCollection('categories');
 const allTechnologies = await getCollection('technologies');
 const allVariants = await getCollection('variants');
 
 const topicMap = new Map(allTopics.map(t => [t.data.id, t.data]));
 const techMap = new Map(allTechnologies.map(t => [t.data.id, t.data]));
 
-// Build question -> techs map
 const questionTechMap = new Map<string, string[]>();
 allVariants.forEach(v => {
 	const techs = questionTechMap.get(v.data.question) || [];
@@ -47,41 +44,39 @@ function getDifficultyClass(diff: string): string {
 }
 ---
 
-<Layout title={`Questions Catalog - Page ${page.currentPage}`} description="Browse our exhaustive list of interview questions. Paginated for performance.">
+<Layout title={`Questions Catalog - Page ${page.currentPage}`} description="Browse our exhaustive list of interview questions. Global search enabled.">
 	<div class="page-header">
 		<div>
 			<h1 class="page-header__title">Questions Catalog</h1>
-			<p class="page-header__subtitle">
+			<p class="page-header__subtitle" id="catalog-subtitle">
 				Showing {page.start + 1}–{page.end + 1} of {page.total} questions
 			</p>
 		</div>
 	</div>
 
-	<!-- Search Bar -->
-	<div style="margin-bottom: 2rem;">
+	<!-- Global Catalog Search -->
+	<div style="margin-bottom: 2.5rem;">
 		<div style="position: relative;">
-			<label for="catalog-search" class="sr-only">Search questions on this page</label>
+			<label for="catalog-search" class="sr-only">Search all questions</label>
 			<input 
 				type="text" 
 				id="catalog-search" 
-				placeholder="Search this page..." 
-				aria-label="Search questions on this page"
-				style="width: 100%; padding: 0.875rem 1rem 0.875rem 3rem; background: var(--color-surface-raised); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); color: var(--color-text-primary); font-family: inherit; font-size: 1rem;"
+				placeholder="Search all questions..." 
+				style="width: 100%; padding: 1rem 1rem 1rem 3.5rem; background: var(--color-surface-raised); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); color: var(--color-text-primary); font-family: inherit; font-size: 1.125rem; box-shadow: var(--shadow-sm); transition: all 0.2s ease;"
 			/>
-			<svg style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--color-text-tertiary);" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+			<svg style="position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--color-text-tertiary);" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
 			</svg>
 		</div>
 	</div>
 
+	<!-- Default Paginated Grid -->
 	<div class="question-grid" id="paginated-grid">
 		{questions.map((question) => {
 			const topic = topicMap.get(question.data.topic);
 			const techs = questionTechMap.get(question.data.id) || [];
 			return (
-				<a href={`/questions/${question.id}`} 
-				   class="card card--interactive catalog-item"
-				   data-search-text={`${question.data.title} ${topic?.title} ${techs.join(' ')}`.toLowerCase()}>
+				<a href={`/questions/${question.id}`} class="card card--interactive">
 					<div class="card__header" style="margin-bottom: 0.5rem;">
 						<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
 						<span style="font-size: 0.75rem; color: var(--color-text-tertiary); display: flex; align-items: center; gap: 0.25rem;">
@@ -101,10 +96,13 @@ function getDifficultyClass(diff: string): string {
 		})}
 	</div>
 
+	<!-- Search Results Grid (Initially Hidden) -->
+	<div class="question-grid" id="search-results-grid" style="display: none;"></div>
+
 	<!-- Pagination Controls -->
-	<nav style="margin-top: 4rem; display: flex; align-items: center; justify-content: center; gap: 2rem;" aria-label="Pagination Navigation">
+	<nav id="pagination-nav" style="margin-top: 4rem; display: flex; align-items: center; justify-content: center; gap: 2rem;" aria-label="Pagination Navigation">
 		{page.url.prev ? (
-			<a href={page.url.prev} class="filter-btn" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;" aria-label="Go to previous page">
+			<a href={page.url.prev} class="filter-btn" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
 				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
 				Previous
 			</a>
@@ -120,7 +118,7 @@ function getDifficultyClass(diff: string): string {
 		</div>
 
 		{page.url.next ? (
-			<a href={page.url.next} class="filter-btn" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;" aria-label="Go to next page">
+			<a href={page.url.next} class="filter-btn" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
 				Next
 				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"/></svg>
 			</a>
@@ -133,37 +131,92 @@ function getDifficultyClass(diff: string): string {
 	</nav>
 
 	<script>
+		let pagefind: any;
+		let isUnavailable = false;
 		const searchInput = document.getElementById('catalog-search') as HTMLInputElement;
-		const items = document.querySelectorAll<HTMLElement>('.catalog-item');
+		const paginatedGrid = document.getElementById('paginated-grid');
+		const resultsGrid = document.getElementById('search-results-grid');
+		const paginationNav = document.getElementById('pagination-nav');
+		const subtitle = document.getElementById('catalog-subtitle');
+		const originalSubtitle = subtitle?.innerHTML;
 
-		// Sync with URL
+		async function initPagefind() {
+			if (pagefind || isUnavailable) return;
+			const pagefindPath = "/pagefind/pagefind.js";
+			try {
+				const response = await fetch(pagefindPath, { method: 'HEAD' });
+				if (!response.ok) throw new Error('Search index not found');
+				// @ts-ignore
+				pagefind = await import(/* @vite-ignore */ pagefindPath);
+			} catch (e) {
+				isUnavailable = true;
+				if (searchInput) {
+					searchInput.placeholder = "Search (Run 'npm run build' to enable)";
+					searchInput.disabled = true;
+					searchInput.style.opacity = "0.6";
+				}
+				console.log('Search unavailable in dev mode.');
+			}
+		}
+
+		searchInput?.addEventListener('mouseenter', initPagefind);
+		searchInput?.addEventListener('focus', initPagefind);
+
+		searchInput?.addEventListener('input', async (e) => {
+			const query = (e.target as HTMLInputElement).value;
+			
+			// Update URL
+			const url = new URL(window.location.href);
+			if (query) url.searchParams.set('q', query);
+			else url.searchParams.delete('q');
+			window.history.replaceState({}, '', url);
+
+			if (!query || query.length < 2) {
+				if (paginatedGrid) paginatedGrid.style.display = 'grid';
+				if (resultsGrid) resultsGrid.style.display = 'none';
+				if (paginationNav) paginationNav.style.display = 'flex';
+				if (subtitle && originalSubtitle) subtitle.innerHTML = originalSubtitle;
+				return;
+			}
+
+			if (!pagefind && !isUnavailable) await initPagefind();
+			if (!pagefind) return;
+
+			const search = await pagefind.debouncedSearch(query);
+			if (!search) return;
+
+			const results = await Promise.all(search.results.map((r: any) => r.data()));
+
+			if (resultsGrid && paginatedGrid && paginationNav && subtitle) {
+				paginatedGrid.style.display = 'none';
+				paginationNav.style.display = 'none';
+				resultsGrid.style.display = 'grid';
+				
+				subtitle.innerHTML = `Found ${results.length} results for "${query}"`;
+
+				if (results.length === 0) {
+					resultsGrid.innerHTML = '<div style="grid-column: 1/-1; padding: 4rem; text-align: center; color: var(--color-text-tertiary);">No questions found matching your search.</div>';
+				} else {
+					resultsGrid.innerHTML = results.map((res: any) => `
+						<a href="${res.url}" class="card card--interactive">
+							<div class="card__header" style="margin-bottom: 0.5rem;">
+								<span class="badge">${res.meta.difficulty || 'General'}</span>
+							</div>
+							<h3 class="card__title" style="font-size: 1rem; margin-bottom: 0.75rem; line-height: 1.4;">${res.meta.title}</h3>
+							<div class="prose" style="font-size: 0.8125rem; color: var(--color-text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+								${res.excerpt}
+							</div>
+						</a>
+					`).join('');
+				}
+			}
+		});
+
 		const urlParams = new URLSearchParams(window.location.search);
 		const initialQuery = urlParams.get('q');
 		if (initialQuery && searchInput) {
 			searchInput.value = initialQuery;
-			applyFilter(initialQuery);
+			searchInput.dispatchEvent(new Event('input'));
 		}
-
-		function applyFilter(query: string) {
-			const lowerQuery = query.toLowerCase();
-			items.forEach(item => {
-				const text = item.dataset.searchText || '';
-				item.style.display = text.includes(lowerQuery) ? '' : 'none';
-			});
-		}
-
-		searchInput?.addEventListener('input', (e) => {
-			const query = (e.target as HTMLInputElement).value;
-			applyFilter(query);
-			
-			// Update URL without reloading
-			const url = new URL(window.location.href);
-			if (query) {
-				url.searchParams.set('q', query);
-			} else {
-				url.searchParams.delete('q');
-			}
-			window.history.replaceState({}, '', url);
-		});
 	</script>
 </Layout>
