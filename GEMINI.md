@@ -20,9 +20,10 @@ When adding content:
 ## Architecture & Validation
 * **Astro:** Use `content.config.ts` for schema enforcement.
 * **Scripts:** `scripts/validate.js` is the source of truth for referential integrity across collections.
+* **Scaling:** Search is powered by **Pagefind**. It requires a production build (`npm run build`) to function.
 * **Directory Structure:**
-    * `content/categories/`, `content/technologies/`, `content/topics/`, `content/concepts/`, `content/questions/`, `content/variants/`, `content/companies/`.
+    * `content/categories/`, `content/technologies/`, `content/topics/`, `content/concepts/`, `content/questions/`, `content/variants/`, `content/paths/`.
 
 ## Quality Standards
-* Every `variant/` must include: `Expected Answer`, `Common Mistakes`, and `Follow-up Questions`.
+* Every `variant/` must include: `Expected Answer`, `Why It Matters`, `Common Mistakes`, and `Follow-up Questions`.
 * Difficulty levels: `Beginner`, `Easy`, `Medium`, `Hard`, `Expert`.

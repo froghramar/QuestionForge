@@ -6,9 +6,6 @@ difficulty: Hard
 topic: topic.type-systems
 concepts:
   - concept.closures
-companies:
-  - company.meta
-  - company.google
 estimated_time: 20
 updated: 2026-08-01
 ---

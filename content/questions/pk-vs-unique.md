@@ -6,9 +6,6 @@ difficulty: Beginner
 topic: topic.database-fundamentals
 concepts:
   - concept.sql-indexing
-companies:
-  - company.microsoft
-  - company.amazon
 estimated_time: 5
 updated: 2026-08-01
 ---

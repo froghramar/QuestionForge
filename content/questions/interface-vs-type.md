@@ -6,10 +6,6 @@ difficulty: Easy
 topic: topic.type-systems
 concepts:
   - concept.structural-typing
-companies:
-  - company.google
-  - company.stripe
-  - company.meta
 estimated_time: 10
 updated: 2026-08-01
 ---

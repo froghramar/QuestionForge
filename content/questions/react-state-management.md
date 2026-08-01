@@ -4,9 +4,6 @@ title: React State Management
 slug: react-context-vs-zustand-redux
 difficulty: Medium
 topic: topic.react-fundamentals
-companies:
-  - company.meta
-  - company.stripe
 estimated_time: 15
 updated: 2026-08-01
 ---

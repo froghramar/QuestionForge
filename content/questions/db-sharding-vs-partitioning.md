@@ -4,10 +4,6 @@ title: Sharding vs Partitioning
 slug: db-sharding-vs-partitioning
 difficulty: Hard
 topic: topic.database-fundamentals
-companies:
-  - company.amazon
-  - company.google
-  - company.stripe
 estimated_time: 20
 updated: 2026-08-01
 ---

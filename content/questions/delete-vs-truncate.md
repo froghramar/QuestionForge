@@ -6,9 +6,6 @@ difficulty: Easy
 topic: topic.database-fundamentals
 concepts:
   - concept.sql-indexing
-companies:
-  - company.amazon
-  - company.stripe
 estimated_time: 5
 updated: 2026-08-01
 ---

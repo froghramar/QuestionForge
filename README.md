@@ -39,7 +39,7 @@ Category (e.g., Backend)
     * `concepts/`: Deep-dive knowledge articles.
     * `questions/`: Interview prompts (language agnostic).
     * `variants/`: Implementation-specific answers.
-    * `companies/`: Company metadata and interview paths.
+    * `paths/`: Curated learning tracks.
 * `scripts/`: Validation and maintenance tools.
 * `docs/`: Architectural and contribution guides.
 
@@ -48,8 +48,9 @@ Category (e.g., Backend)
 # Contribution Workflow
 
 1.  **Validate:** Always run `npm run validate` before committing.
-2.  **Referential Integrity:** Ensure your new content correctly references existing IDs.
-3.  **DRY:** If you're explaining a core concept, check if a `concept/` file should be created or updated instead of putting it all in a `question/`.
+2.  **Test Search:** Search requires a build. Run `npm run build && npm run preview` in `apps/website` to test global search.
+3.  **Referential Integrity:** Ensure your new content correctly references existing IDs.
+4.  **DRY:** If you're explaining a core concept, check if a `concept/` file should be created or updated instead of putting it all in a `question/`.
 
 ---
 

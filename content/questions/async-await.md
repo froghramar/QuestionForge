@@ -6,10 +6,6 @@ difficulty: Medium
 topic: topic.async-programming
 concepts:
   - concept.asynchrony
-companies:
-  - company.microsoft
-  - company.google
-  - company.amazon
 estimated_time: 10
 updated: 2026-08-01
 ---

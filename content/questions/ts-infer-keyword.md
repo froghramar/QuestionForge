@@ -4,9 +4,6 @@ title: The infer Keyword
 slug: ts-infer-keyword-usage
 difficulty: Expert
 topic: topic.type-systems
-companies:
-  - company.stripe
-  - company.google
 estimated_time: 15
 updated: 2026-08-01
 ---

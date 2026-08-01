@@ -6,9 +6,6 @@ difficulty: Medium
 topic: topic.database-fundamentals
 concepts:
   - concept.sql-indexing
-companies:
-  - company.microsoft
-  - company.google
 estimated_time: 10
 updated: 2026-08-01
 ---

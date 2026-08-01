@@ -6,9 +6,6 @@ difficulty: Medium
 topic: topic.design-patterns
 concepts:
   - concept.dependency-injection
-companies:
-  - company.microsoft
-  - company.google
 estimated_time: 15
 updated: 2026-08-01
 ---

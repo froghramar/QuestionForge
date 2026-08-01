@@ -17,12 +17,10 @@ const allTopics = await getCollection('topics');
 const allConcepts = await getCollection('concepts');
 const allVariants = await getCollection('variants');
 const allTechnologies = await getCollection('technologies');
-const allCompanies = await getCollection('companies');
 
 const topic = allTopics.find(t => t.data.id === question.data.topic);
 const questionVariants = allVariants.filter(v => v.data.question === question.data.id);
 const techMap = new Map(allTechnologies.map(t => [t.data.id, t.data]));
-const companyMap = new Map(allCompanies.map(c => [c.data.id, c.data]));
 
 const relatedConcepts = question.data.concepts
 	? question.data.concepts.map(id => allConcepts.find(c => c.data.id === id)).filter(Boolean)
@@ -141,25 +139,12 @@ function getDifficultyClass(diff: string): string {
 		)}
 
 		<footer style="padding-top: 1.5rem; border-top: 1px solid var(--color-border-default);">
-			<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
-				<div>
-					<h3 style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 0.375rem;">Asked at</h3>
-					<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-						{question.data.companies.map((companyId) => {
-							const company = companyMap.get(companyId);
-							return (
-								<span style="font-size: 0.875rem; color: var(--color-text-secondary); font-weight: 500;">
-									{company?.name || companyId}
-								</span>
-							);
-						})}
-					</div>
-				</div>
+			<div style="display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 1rem;">
 				<div style="display: flex; align-items: center; gap: 1rem;">
 					<span style="font-size: 0.75rem; color: var(--color-text-tertiary);">
 						Updated {new Date(question.data.updated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
 					</span>
-					<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/questions/general/${question.id.replace('question.', '')}.md`}
+					<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/questions/${question.id.replace('question.', '')}.md`}
 					   target="_blank"
 					   rel="noopener"
 					   style="font-size: 0.75rem; color: var(--color-text-secondary); display: inline-flex; align-items: center; gap: 0.25rem;">

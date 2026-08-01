@@ -6,9 +6,6 @@ difficulty: Medium
 topic: topic.type-systems
 concepts:
   - concept.structural-typing
-companies:
-  - company.google
-  - company.stripe
 estimated_time: 15
 updated: 2026-08-01
 ---

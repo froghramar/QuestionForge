@@ -4,10 +4,6 @@ title: B-Tree Indexes & SARGability
 slug: sql-indexing-btree-sargable
 difficulty: Hard
 topic: topic.database-fundamentals
-companies:
-  - company.amazon
-  - company.microsoft
-  - company.stripe
 estimated_time: 20
 updated: 2026-08-01
 ---

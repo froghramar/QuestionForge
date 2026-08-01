@@ -53,7 +53,6 @@ const questions = defineCollection({
 		difficulty: z.enum(['Beginner', 'Easy', 'Medium', 'Hard', 'Expert']),
 		topic: z.string(),
 		concepts: z.array(z.string()).optional(),
-		companies: z.array(z.string()),
 		estimated_time: z.number(),
 		updated: z.date().or(z.string().transform((str) => new Date(str))),
 	}),
@@ -66,17 +65,6 @@ const variants = defineCollection({
 		question: z.string(),
 		technology: z.string(),
 		difficulty_override: z.enum(['Beginner', 'Easy', 'Medium', 'Hard', 'Expert']).optional(),
-	}),
-});
-
-const companies = defineCollection({
-	loader: glob({ pattern: "**/*.md", base: "../../content/companies" }),
-	schema: z.object({
-		id: z.string(),
-		name: z.string(),
-		slug: z.string(),
-		website: z.string().url().optional(),
-		headquarters: z.string().optional(),
 	}),
 });
 
@@ -99,6 +87,5 @@ export const collections = {
 	concepts,
 	questions,
 	variants,
-	companies,
 	paths,
 };

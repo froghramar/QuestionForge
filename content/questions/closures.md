@@ -6,10 +6,6 @@ difficulty: Medium
 topic: topic.type-systems
 concepts:
   - concept.closures
-companies:
-  - company.google
-  - company.meta
-  - company.stripe
 estimated_time: 12
 updated: 2026-08-01
 ---

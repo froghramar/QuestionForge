@@ -6,10 +6,6 @@ difficulty: Hard
 topic: topic.react-fundamentals
 concepts:
   - concept.browser-rendering
-companies:
-  - company.meta
-  - company.google
-  - company.stripe
 estimated_time: 15
 updated: 2026-08-01
 ---

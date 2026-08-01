@@ -9,9 +9,9 @@ const COLLECTIONS = {
     technologies: { dir: 'technologies', required: ['id', 'name', 'slug', 'category'] },
     topics: { dir: 'topics', required: ['id', 'title', 'slug', 'category'] },
     concepts: { dir: 'concepts', required: ['id', 'title', 'slug', 'topic'] },
-    companies: { dir: 'companies', required: ['id', 'name', 'slug'] },
-    questions: { dir: 'questions', required: ['id', 'title', 'slug', 'difficulty', 'topic', 'companies'] },
-    variants: { dir: 'variants', required: ['id', 'question', 'technology'] }
+    questions: { dir: 'questions', required: ['id', 'title', 'slug', 'difficulty', 'topic'] },
+    variants: { dir: 'variants', required: ['id', 'question', 'technology'] },
+    paths: { dir: 'paths', required: ['id', 'title', 'description', 'color', 'topics'] }
 };
 
 function walk(dir) {
@@ -110,17 +110,10 @@ function validate() {
         }
     });
 
-    // Question -> Topic, Companies, Concepts
+    // Question -> Topic, Concepts
     registry.data.questions.forEach(item => {
         if (item.data.topic && !registry.ids.has(item.data.topic)) {
             errors.push(`${item.file}: Invalid topic reference: ${item.data.topic}`);
-        }
-        if (Array.isArray(item.data.companies)) {
-            item.data.companies.forEach(companyId => {
-                if (!registry.ids.has(companyId)) {
-                    errors.push(`${item.file}: Invalid company reference: ${companyId}`);
-                }
-            });
         }
         if (Array.isArray(item.data.concepts)) {
             item.data.concepts.forEach(conceptId => {
@@ -138,6 +131,17 @@ function validate() {
         }
         if (item.data.technology && !registry.ids.has(item.data.technology)) {
             errors.push(`${item.file}: Invalid technology reference: ${item.data.technology}`);
+        }
+    });
+
+    // Path -> Topics
+    registry.data.paths.forEach(item => {
+        if (Array.isArray(item.data.topics)) {
+            item.data.topics.forEach(topicId => {
+                if (!registry.ids.has(topicId)) {
+                    errors.push(`${item.file}: Invalid topic reference: ${topicId}`);
+                }
+            });
         }
     });
 

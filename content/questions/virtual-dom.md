@@ -6,10 +6,6 @@ difficulty: Medium
 topic: topic.react-fundamentals
 concepts:
   - concept.virtual-dom
-companies:
-  - company.meta
-  - company.google
-  - company.amazon
 estimated_time: 15
 updated: 2026-08-01
 ---

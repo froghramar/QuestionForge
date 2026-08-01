@@ -6,10 +6,6 @@ difficulty: Hard
 topic: topic.distributed-systems
 concepts:
   - concept.concurrency-control
-companies:
-  - company.amazon
-  - company.stripe
-  - company.microsoft
 estimated_time: 15
 updated: 2026-08-01
 ---

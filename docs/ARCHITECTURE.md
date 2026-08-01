@@ -10,8 +10,17 @@ QuestionForge treats a folder of Markdown files like a relational database. Rela
 2.  **Technology** -> belongs to **Category**
 3.  **Topic** -> belongs to **Category**
 4.  **Concept** -> belongs to **Topic**
-5.  **Question** -> belongs to **Topic**, references **Concepts** and **Companies**.
+5.  **Question** -> belongs to **Topic**, references **Concepts**.
 6.  **Variant** -> belongs to **Question**, references **Technology**.
+7.  **Path** -> references multiple **Topics**.
+
+### Scaling Strategy (Thousands of Questions)
+
+To handle thousands of questions while maintaining a fast, static-first experience:
+
+*   **Discovery Dashboard (Home):** The home page surfaces only high-level paths and recently added items, rather than the full list.
+*   **Astro Pagination:** The catalog (`/questions`) is paginated at build time to prevent DOM bloat and keep page sizes constant.
+*   **Pagefind Search:** Global search is decoupled from the UI state. Pagefind builds a static search index after the site build, allowing sub-millisecond searching across the entire catalog without loading all data into the browser.
 
 ### Stable IDs vs Slugs
 

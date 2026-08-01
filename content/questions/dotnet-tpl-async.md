@@ -4,9 +4,6 @@ title: Task.WhenAll vs Parallel.ForEach
 slug: dotnet-tpl-parallel-vs-async
 difficulty: Hard
 topic: topic.design-patterns
-companies:
-  - company.microsoft
-  - company.amazon
 estimated_time: 20
 updated: 2026-08-01
 ---
