@@ -19,96 +19,132 @@ allVariants.forEach(v => {
 	questionTechMap.set(v.data.question, techs);
 });
 
-// Get unique topics and difficulties for filters
-const topics = [...new Set(allQuestions.map(q => q.data.topic))].map(id => topicMap.get(id)).filter(Boolean);
-const difficulties = ['Beginner', 'Easy', 'Medium', 'Hard', 'Expert'];
+// Latest Questions (Sorted by updated date, then taken top 5)
+const latestQuestions = [...allQuestions]
+	.sort((a, b) => new Date(b.data.updated).getTime() - new Date(a.data.updated).getTime())
+	.slice(0, 5);
 
-// Sort questions: by difficulty order, then title
-const diffOrder: Record<string, number> = { Beginner: 0, Easy: 1, Medium: 2, Hard: 3, Expert: 4 };
-const sortedQuestions = [...allQuestions].sort((a, b) => (diffOrder[a.data.difficulty] || 0) - (diffOrder[b.data.difficulty] || 0));
+// Featured Topics (Topics with most questions)
+const topicStats = allTopics.map(t => ({
+	topic: t,
+	count: allQuestions.filter(q => q.data.topic === t.data.id).length
+})).sort((a, b) => b.count - a.count).slice(0, 6);
+
+// Path Data (Simpler version for home page)
+const paths = [
+	{
+		title: 'Frontend Engineering',
+		description: 'From type systems to React internals — everything a frontend engineer needs.',
+		color: 'var(--color-cat-frontend)',
+		slug: 'frontend-engineering',
+		topicCount: 2,
+	},
+	{
+		title: 'Backend Engineering',
+		description: 'Design patterns, async programming, databases, and distributed systems.',
+		color: 'var(--color-cat-backend)',
+		slug: 'backend-engineering',
+		topicCount: 4,
+	},
+	{
+		title: 'Full Stack',
+		description: 'The complete path — frontend foundations through backend and system design.',
+		color: 'var(--color-accent)',
+		slug: 'full-stack',
+		topicCount: 6,
+	},
+];
 
 function getDifficultyClass(diff: string): string {
 	return `badge--${diff.toLowerCase()}`;
 }
 ---
 
-<Layout title="Home" description="Open-source interview questions for developers. Browse by topic, difficulty, and technology.">
-	<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
-		<div>
-			<h1 class="page-header__title">Interview Questions</h1>
-			<p class="page-header__subtitle">Open-source, community-reviewed questions for developers</p>
+<Layout title="Home" description="Open-source interview questions for developers. Static-first, community-driven.">
+	<section class="hero" style="padding: 3rem 0; text-align: center; max-width: 800px; margin: 0 auto;">
+		<h1 style="font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; line-height: 1.1;">
+			Forge your path to <span style="color: var(--color-accent);">Senior Engineer</span>
+		</h1>
+		<p style="font-size: 1.25rem; color: var(--color-text-secondary); margin-bottom: 2rem;">
+			Open-source, community-reviewed interview questions focused on deep conceptual understanding rather than rote memorization.
+		</p>
+		<div style="display: flex; gap: 1rem; justify-content: center;">
+			<a href="/questions" class="filter-btn filter-btn--active" style="padding: 0.75rem 1.5rem; text-decoration: none;">Browse Catalog</a>
+			<a href="/paths" class="filter-btn" style="padding: 0.75rem 1.5rem; text-decoration: none;">Learning Paths</a>
 		</div>
-		<a href="https://github.com/froghramar/QuestionForge/blob/main/CONTRIBUTING.md#adding-a-new-question" target="_blank" rel="noopener" class="filter-btn filter-btn--active" style="text-decoration: none; font-size: 0.8125rem;">
-			+ Add Question
-		</a>
-	</div>
+	</section>
 
-	<div class="filter-bar" id="filter-bar">
-		<button class="filter-btn filter-btn--active" data-filter="all">All</button>
-		{difficulties.map(diff => (
-			<button class={`filter-btn`} data-filter={`diff:${diff}`}>{diff}</button>
-		))}
-		{topics.map(topic => topic && (
-			<button class="filter-btn" data-filter={`topic:${topic.id}`}>{topic.title}</button>
-		))}
-	</div>
-
-	<div class="question-grid stagger-children" id="question-grid">
-		{sortedQuestions.map((question) => {
-			const topic = topicMap.get(question.data.topic);
-			const techs = questionTechMap.get(question.data.id) || [];
-			return (
-				<a href={`/questions/${question.id}`}
-				   class="card card--interactive"
-				   data-difficulty={question.data.difficulty}
-				   data-topic={question.data.topic}>
-					<div class="card__header">
-						<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
-						<span class="question-card__time">
-							<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-							{question.data.estimated_time}m
-						</span>
-					</div>
-					<h2 class="card__title">{question.data.title}</h2>
-					<div class="card__meta">
-						{topic && <span class="badge badge--topic">{topic.title}</span>}
-						<div class="question-card__techs">
-							{techs.map(tech => (
-								<span class="badge badge--tech">{tech}</span>
-							))}
+	<div style="display: grid; grid-template-columns: 1fr; gap: 4rem; margin-top: 2rem;">
+		
+		<!-- Learning Paths Section -->
+		<section>
+			<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+				<div>
+					<h2 style="font-size: 1.5rem; font-weight: 700; margin: 0;">Learning Paths</h2>
+					<p style="color: var(--color-text-secondary); margin: 0.25rem 0 0;">Structured tracks for focused preparation</p>
+				</div>
+				<a href="/paths" style="font-size: 0.875rem; font-weight: 500; color: var(--color-accent); text-decoration: none;">All Paths →</a>
+			</div>
+			<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+				{paths.map(path => (
+					<a href="/paths" class="card card--interactive" style="display: flex; flex-direction: column; justify-content: space-between;">
+						<div>
+							<div style={`width: 32px; height: 4px; background: ${path.color}; border-radius: 2px; margin-bottom: 1rem;`}></div>
+							<h3 class="card__title">{path.title}</h3>
+							<p style="font-size: 0.875rem; color: var(--color-text-secondary); line-height: 1.5;">{path.description}</p>
 						</div>
-					</div>
-				</a>
-			);
-		})}
+						<div style="margin-top: 1.5rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-tertiary);">
+							{path.topicCount} Topics
+						</div>
+					</a>
+				))}
+			</div>
+		</section>
+
+		<!-- Top Topics & Latest Questions Grid -->
+		<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 4rem;">
+			
+			<!-- Topics -->
+			<section>
+				<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+					<h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Top Topics</h2>
+					<a href="/topics" style="font-size: 0.875rem; font-weight: 500; color: var(--color-accent); text-decoration: none;">View All</a>
+				</div>
+				<div style="display: grid; gap: 0.75rem;">
+					{topicStats.map(({ topic, count }) => (
+						<a href={`/topics/${topic.data.slug}`} class="card card--interactive" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+							<span style="font-weight: 600;">{topic.data.title}</span>
+							<span style="font-size: 0.75rem; color: var(--color-text-tertiary);">{count} questions</span>
+						</a>
+					))}
+				</div>
+			</section>
+
+			<!-- Latest Questions -->
+			<section>
+				<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+					<h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Recently Added</h2>
+					<a href="/questions" style="font-size: 0.875rem; font-weight: 500; color: var(--color-accent); text-decoration: none;">Full Catalog</a>
+				</div>
+				<div style="display: grid; gap: 0.75rem;">
+					{latestQuestions.map((question) => {
+						const topic = topicMap.get(question.data.topic);
+						return (
+							<a href={`/questions/${question.id}`} class="card card--interactive" style="padding: 1rem;">
+								<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
+									<h3 style="font-size: 0.9375rem; font-weight: 600; margin: 0; color: var(--color-text-primary);">{question.data.title}</h3>
+									<span class={`badge ${getDifficultyClass(question.data.difficulty)}`} style="font-size: 0.625rem; padding: 0.125rem 0.375rem;">{question.data.difficulty}</span>
+								</div>
+								<div style="font-size: 0.75rem; color: var(--color-text-tertiary);">
+									{topic?.title}
+								</div>
+							</a>
+						);
+					})}
+				</div>
+			</section>
+
+		</div>
+
 	</div>
-
-	<script>
-		const filterBar = document.getElementById('filter-bar');
-		const grid = document.getElementById('question-grid');
-		if (filterBar && grid) {
-			const buttons = filterBar.querySelectorAll<HTMLButtonElement>('.filter-btn');
-			const cards = grid.querySelectorAll<HTMLElement>('.card');
-
-			buttons.forEach(btn => {
-				btn.addEventListener('click', () => {
-					buttons.forEach(b => b.classList.remove('filter-btn--active'));
-					btn.classList.add('filter-btn--active');
-
-					const filter = btn.dataset.filter || 'all';
-					cards.forEach(card => {
-						if (filter === 'all') {
-							card.style.display = '';
-							return;
-						}
-						const [type, value] = filter.split(':');
-						const match = type === 'diff'
-							? card.dataset.difficulty === value
-							: card.dataset.topic === value;
-						card.style.display = match ? '' : 'none';
-					});
-				});
-			});
-		}
-	</script>
 </Layout>
