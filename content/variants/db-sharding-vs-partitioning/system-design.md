@@ -5,44 +5,58 @@ technology: tech.system-design
 ---
 # Expected Answer
 
-### Partitioning (Single Database)
+While both techniques split large datasets, they operate at different levels:
 
-Partitioning splits a large table into smaller, more manageable pieces **within the same database instance**.
+- **Partitioning**: A database-level feature that splits a table into smaller pieces **within a single database instance**. It is usually transparent to the application.
+- **Sharding**: An architectural pattern that distributes data across **multiple independent database servers**. Each server (shard) holds a subset of the data.
 
-- **Horizontal partitioning (Range/List/Hash)**: Rows are distributed across partitions based on a column value. Example: orders partitioned by `created_date` into monthly partitions.
-- **Vertical partitioning**: Columns are split across tables. Example: moving a `BLOB` column to a separate table to keep the main table's rows small.
-- **Benefits**: Faster queries (partition pruning), easier maintenance (drop old partitions), improved I/O distribution.
-- **Constraint**: Still limited by a single server's CPU, memory, and disk.
+# Why It Matters
 
-### Sharding (Multiple Databases)
+Scalability limits. Partitioning helps manage large tables and improves query performance (via partition pruning) but is still limited by a single server's resources (CPU/RAM). Sharding allows for **Horizontal Scaling**, enabling a system to handle billions of rows and millions of requests by adding more machines. However, sharding introduces massive complexity: cross-shard joins become impossible, and transactions across shards require complex coordination.
 
-Sharding distributes data across **multiple independent database servers**, each holding a subset of the data.
+# Example Code
 
-- **Shard key**: The column used to determine which shard a row belongs to (e.g., `user_id % N`).
-- **Benefits**: Horizontal scaling beyond a single machine's limits, independent failure domains.
-- **Costs**: Application-level routing, cross-shard queries are expensive or impossible, distributed transactions require 2PC or Saga patterns.
+### Partitioning (PostgreSQL)
 
-### Key Differences
+```sql
+-- Create a partitioned table by range
+CREATE TABLE orders (
+    id int,
+    order_date date not null,
+    total decimal
+) PARTITION BY RANGE (order_date);
 
-| Aspect | Partitioning | Sharding |
-|---|---|---|
-| Scope | Single database | Multiple databases/servers |
-| Scaling | Vertical (bigger machine) | Horizontal (more machines) |
-| Cross-partition queries | Fast (same engine) | Slow (network hops, no joins) |
-| Transactions | Full ACID | Requires distributed coordination |
-| Complexity | Database-managed | Application-managed |
+-- Create specific partitions
+CREATE TABLE orders_2023_q1 PARTITION OF orders
+    FOR VALUES FROM ('2023-01-01') TO ('2023-04-01');
+```
 
-### Shard Key Selection
+### Sharding (Application Logic)
 
-A bad shard key creates **hotspots** — one shard receives disproportionate traffic. For example, sharding a social media app by `country` puts most traffic on the US shard. A good shard key distributes writes evenly (e.g., `user_id`).
+```javascript
+// A simple shard routing function
+function getShardConnection(userId) {
+  const shardCount = 4;
+  const shardId = userId % shardCount;
+  return dbConnections[shardId];
+}
+
+const db = getShardConnection(user.id);
+await db.query("INSERT INTO orders ...");
+```
 
 # Common Mistakes
 
-- **Confusing the two**: Partitioning is a database-level optimization; sharding is an architectural pattern. They solve different problems and can be used together.
-- **Sharding prematurely**: Sharding adds enormous operational complexity. Most applications should exhaust vertical scaling, read replicas, and caching before sharding.
-- **Choosing a shard key based on read patterns only**: The shard key must distribute writes evenly. Optimizing for reads often means denormalizing data or maintaining secondary indexes across shards.
+- **Premature Sharding**: Sharding is an operational burden. Most apps should exhaust vertical scaling, read replicas, and caching before moving to a sharded architecture.
+- **Choosing a bad Shard Key**: A shard key that creates "hotspots" (e.g., sharding by `country` where 90% of users are in one country) defeats the purpose of sharding.
+- **Confusing Partitioning with Sharding**: Thinking that partitioning a table will allow it to scale beyond the storage limits of a single machine.
 
 # Follow-up Questions
 
-- How do you handle cross-shard joins? (Answer: You generally don't. Denormalize the data so each shard has what it needs, or use a scatter-gather query pattern at the application level).
-- What is consistent hashing and why is it useful for sharding? (Answer: Consistent hashing minimizes data movement when shards are added or removed. Instead of rehashing all keys, only keys in the affected range need to move).
+- **What is a "Hot Shard"?** (Answer: A shard that receives a disproportionate amount of traffic compared to others, usually due to an uneven distribution of the shard key).
+- **How do you handle cross-shard queries?** (Answer: Either by denormalizing data so it exists on all shards, or by using a query aggregator/proxy layer that executes queries on all shards and merges results).
+
+# References
+
+- [Database Sharding: Concepts and Best Practices](https://www.digitalocean.com/community/tutorials/understanding-database-sharding)
+- [PostgreSQL Documentation: Table Partitioning](https://www.postgresql.org/docs/current/ddl-partitioning.html)

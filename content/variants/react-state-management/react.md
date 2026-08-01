@@ -5,25 +5,53 @@ technology: tech.react
 ---
 # Expected Answer
 
-### Context API
-- **Purpose:** Designed for "Static" or low-frequency data (e.g., Theme, Locale, Auth User).
-- **Behavior:** When a Context Provider's value changes, **all** components that consume that context are re-rendered.
-- **Pros:** Zero dependencies; built-in; perfect for dependency injection.
-- **Cons:** Performance bottleneck for high-frequency updates (e.g., a stock price ticker or a form input).
+The choice between **Context API** and a **Global State Library** (like Zustand or Redux) depends on the frequency of updates and the complexity of the data:
 
-### State Libraries (Zustand, Redux)
-- **Purpose:** Designed for high-frequency, complex, or global state.
-- **Behavior:** Use "selectors" to ensure that a component only re-renders if the *specific* slice of state it cares about changes.
-- **Pros:** Performance optimizations out of the box; devtools; middle-ware support.
-- **Cons:** External dependency; boilerplate (in the case of Redux).
+- **Context API**: Best for "static" or low-frequency data (Themes, User Auth, Locale). It is built-in but lacks a "selector" mechanism, meaning every component consuming the context re-renders whenever any part of the context value changes.
+- **State Libraries**: Best for high-frequency or complex global state. They use a subscription/selector model to ensure that a component only re-renders when the specific slice of data it cares about changes.
 
-### The "Selector" Difference
-The biggest technical difference is that Context does not support selectors natively. If you have 100 components using `useContext(MyContext)`, and you update one property in that context, all 100 will re-render. Libraries like Zustand use a subscription model to avoid this.
+# Why It Matters
+
+Using Context API for high-frequency state (like an input field or a real-time price ticker) can lead to **performance bottlenecks**. Since Context triggers re-renders for all consumers, a single keystroke in a large application could trigger hundreds of unnecessary renders, making the UI feel sluggish. Libraries like Zustand solve this by decoupling state updates from the React render tree.
+
+# Example Code
+
+### Context API (Triggers re-render for all consumers)
+
+```jsx
+const UserContext = createContext();
+
+function Profile() {
+  const { name } = useContext(UserContext); // Re-renders if name OR email changes
+  return <div>{name}</div>;
+}
+```
+
+### Zustand (Selector-based, efficient)
+
+```javascript
+const useStore = create((set) => ({
+  name: "Frog",
+  email: "frog@example.com",
+}));
+
+function Profile() {
+  const name = useStore(state => state.name); // ONLY re-renders if name changes
+  return <div>{name}</div>;
+}
+```
 
 # Common Mistakes
-- **Prop Drilling Fix:** Using Context to avoid prop drilling for data that isn't actually "global".
-- **Context for Everything:** Putting your entire app state in one giant Context Provider.
+
+- **Using Context for "Prop Drilling" only**: Context is a dependency injection tool, not just a way to avoid passing props. If the data is only used by a small sub-tree, consider passing props or using component composition instead.
+- **One Giant Context**: Putting the entire application state into a single Context Provider. This guarantees that a change to one tiny piece of state will re-render the entire application.
 
 # Follow-up Questions
-- How can you optimize Context performance? (Answer: Splitting contexts or memoizing children).
-- Why is Zustand generally preferred over Redux in modern React? (Answer: Minimal boilerplate and simpler API).
+
+- **How can you optimize Context performance without a library?** (Answer: Split one large context into several smaller, focused contexts; or wrap child components in `React.memo`).
+- **Why is Zustand often preferred over Redux?** (Answer: Less boilerplate, no need to wrap the app in a Provider, and a simpler hook-based API).
+
+# References
+
+- [React Docs: Passing Data Deeply with Context](https://react.dev/learn/passing-data-deeply-with-context)
+- [Zustand Documentation](https://docs.pmnd.rs/zustand/getting-started/introduction)

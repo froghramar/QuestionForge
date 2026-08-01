@@ -4,20 +4,48 @@ question: question.js-prototypes
 technology: tech.javascript
 ---
 # Expected Answer
-JavaScript uses **Prototypal Inheritance**. Every object has a hidden property (usually denoted as `[[Prototype]]` or `__proto__`) that points to its prototype object. When accessing a property, if it's not found on the object itself, the engine searches the prototype, then the prototype's prototype, and so on, until it hits `null` (usually at `Object.prototype`).
+
+JavaScript uses **Prototypal Inheritance**. Every object has a hidden internal property (denoted as `[[Prototype]]`) that points to another object (its prototype). When you access a property that doesn't exist on an object, the engine searches the prototype, then the prototype's prototype, forming the **Prototype Chain**, until it hits `null`.
+
+When using a constructor function with `new`, the new object's `[[Prototype]]` is automatically linked to the constructor's `.prototype` property.
+
+# Why It Matters
+
+Understanding prototypes is key to understanding how JavaScript handles memory and inheritance. Instead of every instance having its own copy of a method, methods are shared on the prototype, saving significant memory. It also explains how built-in features like `.map()` or `.filter()` work—they are methods defined on `Array.prototype`.
+
+# Example Code
 
 ### The `new` Keyword Mechanism
-When you call `const instance = new Constructor()`, the following four steps occur:
 
-1. **New Object Creation:** A brand new, empty object is created (`{}`).
-2. **Prototype Linking:** The `[[Prototype]]` of this new object is linked to the `prototype` property of the `Constructor` function.
-3. **Execution/Binding:** The `Constructor` function is executed with its `this` context bound to the new object.
-4. **Return Result:** If the constructor returns an object, that object is returned. Otherwise, the new object created in step 1 is returned automatically.
+```javascript
+function Animal(name) {
+  this.name = name;
+}
+
+Animal.prototype.sayHi = function() {
+  console.log(`Hi, I'm ${this.name}`);
+};
+
+const dog = new Animal('Buddy');
+
+// Steps during `new Animal('Buddy')`:
+// 1. New object created: {}
+// 2. Prototype linked: dog.__proto__ === Animal.prototype
+// 3. `this` bound to new object: name = 'Buddy'
+// 4. Object returned
+```
 
 # Common Mistakes
-- **Confusing `__proto__` and `prototype`:** `prototype` is a property on functions (used when they act as constructors), while `__proto__` is a property on *all* objects (representing the actual chain).
-- **Shadowing:** Unintentionally defining a property on an instance that exists on the prototype, hiding the prototype version.
+
+- **Confusing `__proto__` and `prototype`**: `prototype` is a property on constructor functions used to build the chain for *new instances*. `__proto__` (or `Object.getPrototypeOf`) is the actual link on an *instance* that points to its prototype.
+- **Modifying Built-in Prototypes**: "Monkey patching" (e.g., `Array.prototype.myFunc = ...`) is dangerous as it can cause collisions with future JS versions or other libraries.
 
 # Follow-up Questions
-- How does `Object.create(null)` differ from `{}`? (Answer: It has no prototype chain).
-- Does the modern `class` syntax change this underlying mechanism? (Answer: No, it's mostly syntactic sugar over the same prototype chain).
+
+- **How does `Object.create(null)` differ from `{}`?** (Answer: It creates an object with no prototype at all—no `toString`, no `hasOwnProperty`, etc. Useful for clean maps/dictionaries).
+- **Does the `class` syntax change how this works?** (Answer: No, `class` is mostly syntactic sugar over the same prototypal mechanism).
+
+# References
+
+- [MDN Web Docs: Inheritance and the prototype chain](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
+- [JavaScript.info: Prototypes, inheritance](https://javascript.info/prototypes)

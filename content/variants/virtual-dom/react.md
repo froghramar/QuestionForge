@@ -5,36 +5,48 @@ technology: tech.react
 ---
 # Expected Answer
 
-React maintains a lightweight in-memory representation of the UI called the **Virtual DOM**. When state or props change, React builds a new VDOM tree, compares it with the previous one, and applies only the necessary changes to the real DOM.
+The **Virtual DOM (VDOM)** is a lightweight, in-memory representation of the real DOM. When a component's state changes, React creates a new VDOM tree and compares it to the previous one in a process called **Reconciliation** (or "Diffing"). It then computes the minimum set of changes needed and applies them to the real DOM in a single batch.
+
+The **Diffing Algorithm** is optimized for performance by assuming that different element types will produce different trees and using **keys** to track elements across renders.
+
+# Why It Matters
+
+Direct DOM manipulation is expensive because it triggers browser layout and paint cycles. The VDOM allows React to **batch updates**, preventing "layout thrashing" and ensuring that the UI stays in sync with the application state without the developer having to manually track which parts of the page need to change. It enables a declarative programming model: you describe *what* the UI should look like, and React handles *how* to update the browser.
+
+# Example Code
 
 ### The Reconciliation Process
 
-1. **Trigger**: A component's state or props change, scheduling a re-render.
-2. **Render phase**: React calls the component's render function to produce a new VDOM tree (a tree of React elements — plain JavaScript objects).
-3. **Diffing**: React compares the new tree with the previous tree using its O(n) heuristic algorithm:
-   - **Different element types** (e.g., `<div>` → `<span>`): Tear down the old subtree entirely and build a new one.
-   - **Same element type**: Compare attributes/props, update only what changed, and recurse into children.
-   - **Lists**: Use `key` props to match children between renders, enabling efficient reordering without unnecessary unmount/remount.
-4. **Commit phase**: React applies the computed changes to the real DOM in a single batch.
+```jsx
+// Render 1:
+<ul>
+  <li key="a">Apple</li>
+  <li key="b">Banana</li>
+</ul>
 
-### Why Not Direct DOM Manipulation?
+// Render 2:
+<ul>
+  <li key="c">Cherry</li>
+  <li key="a">Apple</li>
+  <li key="b">Banana</li>
+</ul>
 
-The Virtual DOM isn't faster than direct DOM updates for a single change. Its value is **batching and minimizing** DOM operations. When 10 state updates happen in one event handler, React computes one diff and applies one batch of DOM mutations instead of 10 separate ones.
-
-### React Fiber
-
-React Fiber (React 16+) is the reimplemented reconciliation engine that enables:
-- **Interruptible rendering**: Long renders can be paused to handle urgent updates (e.g., user input).
-- **Priority scheduling**: Updates are assigned priorities — `startTransition` marks non-urgent updates.
-- **Concurrent features**: Suspense, streaming SSR, and selective hydration.
+// Result: React sees the keys and knows it only needs to 
+// INSERT one <li> instead of rebuilding the entire list.
+```
 
 # Common Mistakes
 
-- **Believing the VDOM is always faster than the real DOM**: It's an optimization for update batching, not a universal performance improvement. For a single, simple change, direct DOM manipulation is faster.
-- **Missing or unstable keys in lists**: Using array index as a key breaks reconciliation when items are reordered, inserted, or deleted — React can't distinguish which items changed.
-- **Direct DOM manipulation inside React components**: Using `document.getElementById()` or jQuery alongside React causes the VDOM and real DOM to desync, leading to unpredictable behavior.
+- **Thinking VDOM is always faster**: The VDOM is an abstraction that adds its own overhead. For extremely simple updates, direct DOM manipulation is faster. The VDOM wins by optimizing complex, multi-component updates.
+- **Using Array Index as Key**: When items are reordered, using the index as a key causes React to mismatch component instances with their state, leading to subtle bugs in forms and animations.
+- **Directly Mutating the DOM**: Using `document.getElementById` to change a React-managed element. This causes the VDOM and Real DOM to desync, which React will likely overwrite on the next render.
 
 # Follow-up Questions
 
-- What is React Fiber and how does it differ from the original stack reconciler? (Answer: The stack reconciler processed the tree synchronously and couldn't be interrupted. Fiber uses a linked-list structure that can pause, resume, and prioritize work units).
-- Why are keys important in lists, and why is using the array index as a key problematic? (Answer: Keys let React identify which items have changed. Index-as-key fails when items are reordered because the key doesn't correspond to the actual data — React reuses the wrong component instances, losing state).
+- **What is React Fiber?** (Answer: The current reconciliation engine that allows React to split the rendering work into small chunks and prioritize urgent updates like user input).
+- **Why are keys necessary in React?** (Answer: Keys provide a stable identity for elements, allowing React to match them across renders even if they move positions in a list).
+
+# References
+
+- [React Docs: Preserving and Resetting State](https://react.dev/learn/preserving-and-resetting-state)
+- [React Implementation Notes: Reconciliation](https://legacy.reactjs.org/docs/reconciliation.html)

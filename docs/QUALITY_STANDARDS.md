@@ -61,29 +61,49 @@ Every question must have these sections after the frontmatter:
 
 ### Required Sections
 
-Every variant **must** include these three sections:
+Every variant **must** include these sections in this order to provide a consistent "interview experience":
 
 #### 1. Expected Answer
+- **Minimum 150 words** for Medium+ questions.
+- A concise but comprehensive summary of how a strong candidate should answer the question.
+- Explain the "why", not just the "what".
 
-- **Minimum 150 words** for Medium+ questions
-- **Include code examples** for any programming-related question
-- Code must be **real, runnable code** — no pseudocode, no `// do something here`
-- Use `###` subheadings to organize complex answers
-- Explain the "why", not just the "what"
+#### 2. Why It Matters
+- Explain the practical impact of this knowledge in a production environment.
+- What happens if you get this wrong in the real world?
 
-#### 2. Common Mistakes
+#### 3. Example Code
+- Include code examples for any programming-related question.
+- Code must be **real, runnable code** — no pseudocode, no `// do something here`.
+- Use `###` subheadings to organize complex examples.
+- For SQL, use `# SQL Example`.
 
-- **Minimum 2 items**
-- Each mistake must be **specific**: ~~"Not understanding closures"~~ → "Creating closures over `var` in loops, causing all iterations to share the same variable reference"
-- Explain **what goes wrong**, not just what to avoid
-- Include the **consequence** of the mistake where relevant
+#### 4. Common Mistakes
+- **Minimum 2 items**.
+- Each mistake must be **specific**: ~~"Not understanding closures"~~ → "Creating closures over `var` in loops, causing all iterations to share the same variable reference".
+- Explain **what goes wrong** and the **consequence**.
 
-#### 3. Follow-up Questions
+#### 5. Follow-up Questions
+- **Minimum 2 items**.
+- Include **parenthetical answer hints**: `(Answer: brief explanation)`.
+- Follow-ups should go deeper than the original question.
 
-- **Minimum 2 items**
-- Include **parenthetical answer hints**: `(Answer: brief explanation)`
-- Follow-ups should go deeper than the original question, not sideways
-- Good follow-ups test whether understanding is superficial or genuine
+### Optional (But Encouraged) Sections
+
+#### Performance Notes
+- Discuss time/space complexity, memory usage, or runtime overhead.
+- Crucial for "Hard" and "Expert" questions.
+
+#### Platform-Specific Notes (e.g., # PostgreSQL Notes, # SQL Server Notes)
+- Use these when the technology has significant implementation differences across platforms.
+- Essential for database and systems questions.
+
+#### References
+- Links to official documentation, seminal blog posts, or RFCs.
+- Help contributors and readers verify the facts.
+
+#### Related Questions
+- Links to other questions in the forge that explore adjacent concepts.
 
 ---
 

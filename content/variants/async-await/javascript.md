@@ -7,7 +7,15 @@ technology: tech.javascript
 
 In JavaScript, `async`/`await` is syntactic sugar over **Promises** and the **event loop**. An `async` function always returns a Promise. The `await` keyword pauses execution of the async function until the Promise settles, then resumes with the resolved value.
 
-### How It Works
+Under the hood, the engine uses **microtasks**. When `await` is hit, the function suspends and a microtask is queued. After the current call stack clears and the awaited Promise resolves, the microtask runs the continuation.
+
+# Why It Matters
+
+Asynchronous programming is the backbone of high-performance Node.js and responsive web applications. Without `async/await`, developers were forced into "Callback Hell" or complex Promise chains that were difficult to read and debug. Understanding the event loop and microtask queue is critical for avoiding UI freezes and race conditions.
+
+# Example Code
+
+### Basic Usage
 
 ```javascript
 async function fetchUser(id) {
@@ -22,8 +30,6 @@ async function fetchUser(id) {
 }
 ```
 
-Under the hood, the engine uses **microtasks**. When `await` is hit, the function suspends and a microtask is queued. After the current call stack clears and the awaited Promise resolves, the microtask runs the continuation.
-
 ### Sequential vs Concurrent
 
 ```javascript
@@ -35,10 +41,6 @@ const b = await fetchB();
 const [a, b] = await Promise.all([fetchA(), fetchB()]);
 ```
 
-### Top-Level Await
-
-ES modules support `await` at the top level. This is useful for initialization but blocks the module graph — importing modules must wait for the `await` to resolve.
-
 # Common Mistakes
 
 - **Sequential awaiting when concurrent is possible**: Writing `await a(); await b();` when the two calls are independent. This doubles the latency unnecessarily.
@@ -47,5 +49,10 @@ ES modules support `await` at the top level. This is useful for initialization b
 
 # Follow-up Questions
 
-- What is the difference between microtasks and macrotasks? (Answer: Microtasks (Promises, `queueMicrotask`) run before macrotasks (`setTimeout`, I/O callbacks). The microtask queue is fully drained before the next macrotask runs).
-- How do you limit concurrency when awaiting many Promises? (Answer: Use `Promise.allSettled` with chunking, or a library like `p-limit` to control the concurrency pool size).
+- **What is the difference between microtasks and macrotasks?** (Answer: Microtasks (Promises, `queueMicrotask`) run before macrotasks (`setTimeout`, I/O callbacks). The microtask queue is fully drained before the next macrotask runs).
+- **How do you limit concurrency when awaiting many Promises?** (Answer: Use `Promise.allSettled` with chunking, or a library like `p-limit` to control the concurrency pool size).
+
+# References
+
+- [MDN Web Docs: async function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
+- [JavaScript.info: Async/await](https://javascript.info/async-await)

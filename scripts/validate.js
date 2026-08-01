@@ -3,6 +3,7 @@ const path = require('path');
 const matter = require('gray-matter');
 
 const BASE_CONTENT_DIR = path.join(__dirname, '../content');
+
 const COLLECTIONS = {
     categories: { dir: 'categories', required: ['id', 'title', 'slug'] },
     technologies: { dir: 'technologies', required: ['id', 'name', 'slug', 'category'] },
@@ -40,10 +41,11 @@ function validate() {
 
     // 1. Load and check internal consistency
     for (const [key, config] of Object.entries(COLLECTIONS)) {
-        const dirPath = path.join(BASE_CONTENT_DIR, config.dir);
-        const files = walk(dirPath);
         registry.slugs.set(key, new Set());
         registry.data[key] = [];
+
+        const dirPath = path.join(BASE_CONTENT_DIR, config.dir);
+        const files = walk(dirPath);
 
         files.forEach(file => {
             const content = fs.readFileSync(file, 'utf8');
@@ -73,6 +75,16 @@ function validate() {
             }
 
             registry.data[key].push({ id: data.id, data, file: relativePath });
+
+            // Enforcement of sections for variants
+            if (key === 'variants') {
+                const requiredSections = ['# Expected Answer', '# Why It Matters', '# Common Mistakes', '# Follow-up Questions'];
+                requiredSections.forEach(section => {
+                    if (!content.includes(section)) {
+                        errors.push(`${relativePath}: Missing required section: ${section}`);
+                    }
+                });
+            }
         });
     }
 
