@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import GlobalSearch from '../components/GlobalSearch.astro';
 
 interface Props {
 	title: string;
@@ -47,7 +48,7 @@ function isActive(path: string): boolean {
 		</script>
 	</head>
 	<body>
-		<header class="site-header">
+		<header class="site-header" data-pagefind-ignore>
 			<div class="site-header__inner">
 				<a href="/" class="site-logo">
 					<svg class="site-logo__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -73,6 +74,7 @@ function isActive(path: string): boolean {
 					</nav>
 
 					<div class="header-actions">
+						<GlobalSearch />
 						<ThemeSwitcher />
 						<button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
 							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -86,11 +88,11 @@ function isActive(path: string): boolean {
 			</div>
 		</header>
 
-		<main class="site-main">
+		<main class="site-main" data-pagefind-body>
 			<slot />
 		</main>
 
-		<footer class="site-footer">
+		<footer class="site-footer" data-pagefind-ignore>
 			<span>Open Source</span>
 			<span> · </span>
 			<a href="https://github.com/froghramar/QuestionForge" target="_blank" rel="noopener">Contribute on GitHub</a>

@@ -1,0 +1,136 @@
+---
+---
+<div class="global-search" id="global-search-root">
+	<div style="position: relative;">
+		<label for="site-search" class="sr-only">Search all questions</label>
+		<input 
+			type="text" 
+			id="site-search" 
+			placeholder="Search catalog..." 
+			autocomplete="off"
+			style="width: 200px; padding: 0.5rem 0.75rem 0.5rem 2.25rem; background: var(--color-surface-raised); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); color: var(--color-text-primary); font-family: inherit; font-size: 0.875rem; transition: all 0.2s ease;"
+		/>
+		<svg style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--color-text-tertiary);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+		</svg>
+	</div>
+
+	<div id="search-results" class="search-results-dropdown" style="display: none;">
+		<div id="search-results-list"></div>
+	</div>
+</div>
+
+<style>
+	.global-search {
+		position: relative;
+	}
+	
+	#site-search:focus {
+		width: 300px;
+		outline: none;
+		border-color: var(--color-accent);
+		box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb), 0.1);
+	}
+
+	.search-results-dropdown {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		right: 0;
+		width: 400px;
+		max-height: 400px;
+		overflow-y: auto;
+		background: var(--color-surface-default);
+		border: 1px solid var(--color-border-default);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-lg);
+		z-index: 1000;
+		padding: 0.5rem;
+	}
+
+	@media (max-width: 640px) {
+		#site-search { width: 100%; }
+		#site-search:focus { width: 100%; }
+		.search-results-dropdown { width: calc(100vw - 2rem); left: 50%; transform: translateX(-50%); }
+	}
+</style>
+
+<script>
+	// Pagefind integration
+	let pagefind: any;
+
+	const input = document.getElementById('site-search') as HTMLInputElement;
+	const resultsContainer = document.getElementById('search-results');
+	const resultsList = document.getElementById('search-results-list');
+
+	async function initPagefind() {
+		if (pagefind) return;
+		try {
+			const pagefindPath = "/pagefind/pagefind.js";
+			// @ts-ignore - Pagefind is generated at build time
+			pagefind = await import(/* @vite-ignore */ pagefindPath);
+			await pagefind.options({
+				// Optimize for speed
+				ranking: {
+					termSimilarity: 1.0,
+					pageLength: 0.1
+				}
+			});
+		} catch (e) {
+			console.warn('Pagefind not found. Search will be unavailable until a production build is run.');
+		}
+	}
+
+	input?.addEventListener('focus', initPagefind);
+
+	input?.addEventListener('input', async (e) => {
+		const query = (e.target as HTMLInputElement).value;
+		
+		if (!query || query.length < 2) {
+			if (resultsContainer) resultsContainer.style.display = 'none';
+			return;
+		}
+
+		if (!pagefind) await initPagefind();
+		if (!pagefind) return;
+
+		const search = await pagefind.debouncedSearch(query);
+		if (!search) return;
+
+		const results = await Promise.all(search.results.slice(0, 8).map((r: any) => r.data()));
+
+		if (resultsList && resultsContainer) {
+			if (results.length === 0) {
+				resultsList.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--color-text-tertiary); font-size: 0.875rem;">No results found</div>';
+			} else {
+				resultsList.innerHTML = results.map((res: any) => `
+					<a href="${res.url}" class="search-result-item" style="display: block; padding: 0.75rem; text-decoration: none; border-radius: var(--radius-md); transition: background 0.1s;">
+						<div style="font-weight: 600; font-size: 0.875rem; color: var(--color-text-primary); margin-bottom: 0.125rem;">${res.meta.title}</div>
+						<div style="font-size: 0.75rem; color: var(--color-text-tertiary); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
+							${res.excerpt}
+						</div>
+					</a>
+				`).join('');
+			}
+			resultsContainer.style.display = 'block';
+		}
+	});
+
+	// Close on click outside
+	document.addEventListener('click', (e) => {
+		if (!document.getElementById('global-search-root')?.contains(e.target as Node)) {
+			if (resultsContainer) resultsContainer.style.display = 'none';
+		}
+	});
+</script>
+
+<style is:global>
+	.search-result-item:hover {
+		background: var(--color-surface-raised);
+	}
+	.search-result-item mark {
+		background: transparent;
+		color: var(--color-accent);
+		font-weight: 700;
+		text-decoration: underline;
+	}
+</style>

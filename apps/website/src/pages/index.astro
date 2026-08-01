@@ -6,6 +6,7 @@ const allQuestions = await getCollection('questions');
 const allVariants = await getCollection('variants');
 const allTopics = await getCollection('topics');
 const allTechnologies = await getCollection('technologies');
+const allPaths = await getCollection('paths');
 
 const topicMap = new Map(allTopics.map(t => [t.data.id, t.data]));
 const techMap = new Map(allTechnologies.map(t => [t.data.id, t.data]));
@@ -30,30 +31,8 @@ const topicStats = allTopics.map(t => ({
 	count: allQuestions.filter(q => q.data.topic === t.data.id).length
 })).sort((a, b) => b.count - a.count).slice(0, 6);
 
-// Path Data (Simpler version for home page)
-const paths = [
-	{
-		title: 'Frontend Engineering',
-		description: 'From type systems to React internals — everything a frontend engineer needs.',
-		color: 'var(--color-cat-frontend)',
-		slug: 'frontend-engineering',
-		topicCount: 2,
-	},
-	{
-		title: 'Backend Engineering',
-		description: 'Design patterns, async programming, databases, and distributed systems.',
-		color: 'var(--color-cat-backend)',
-		slug: 'backend-engineering',
-		topicCount: 4,
-	},
-	{
-		title: 'Full Stack',
-		description: 'The complete path — frontend foundations through backend and system design.',
-		color: 'var(--color-accent)',
-		slug: 'full-stack',
-		topicCount: 6,
-	},
-];
+// Sorted Paths
+const paths = allPaths.sort((a, b) => a.data.order - b.data.order);
 
 function getDifficultyClass(diff: string): string {
 	return `badge--${diff.toLowerCase()}`;
@@ -89,12 +68,12 @@ function getDifficultyClass(diff: string): string {
 				{paths.map(path => (
 					<a href="/paths" class="card card--interactive" style="display: flex; flex-direction: column; justify-content: space-between;">
 						<div>
-							<div style={`width: 32px; height: 4px; background: ${path.color}; border-radius: 2px; margin-bottom: 1rem;`}></div>
-							<h3 class="card__title">{path.title}</h3>
-							<p style="font-size: 0.875rem; color: var(--color-text-secondary); line-height: 1.5;">{path.description}</p>
+							<div style={`width: 32px; height: 4px; background: ${path.data.color}; border-radius: 2px; margin-bottom: 1rem;`}></div>
+							<h3 class="card__title">{path.data.title}</h3>
+							<p style="font-size: 0.875rem; color: var(--color-text-secondary); line-height: 1.5;">{path.data.description}</p>
 						</div>
 						<div style="margin-top: 1.5rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-tertiary);">
-							{path.topicCount} Topics
+							{path.data.topics.length} Topics
 						</div>
 					</a>
 				))}

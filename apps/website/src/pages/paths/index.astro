@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 
 const allTopics = await getCollection('topics');
 const allQuestions = await getCollection('questions');
+const allPaths = await getCollection('paths');
 
 const topicMap = new Map(allTopics.map(t => [t.data.id, t.data]));
 
@@ -14,43 +15,23 @@ function getTopicStats(topicId: string) {
 	return { count: questions.length, totalTime };
 }
 
-// Define learning paths from existing data
-const paths = [
-	{
-		title: 'Frontend Engineering',
-		description: 'From type systems to React internals — everything a frontend engineer needs.',
-		color: 'var(--color-cat-frontend)',
-		topics: ['topic.type-systems', 'topic.react-fundamentals'],
-	},
-	{
-		title: 'Backend Engineering',
-		description: 'Design patterns, async programming, databases, and distributed systems.',
-		color: 'var(--color-cat-backend)',
-		topics: ['topic.design-patterns', 'topic.async-programming', 'topic.database-fundamentals', 'topic.distributed-systems'],
-	},
-	{
-		title: 'Full Stack',
-		description: 'The complete path — frontend foundations through backend and system design.',
-		color: 'var(--color-accent)',
-		topics: ['topic.type-systems', 'topic.react-fundamentals', 'topic.design-patterns', 'topic.async-programming', 'topic.database-fundamentals', 'topic.distributed-systems'],
-	},
-];
+const pathData = allPaths
+	.sort((a, b) => a.data.order - b.data.order)
+	.map(path => {
+		const steps = path.data.topics
+			.map(id => {
+				const topic = topicMap.get(id);
+				if (!topic) return null;
+				const stats = getTopicStats(id);
+				return { topic, stats };
+			})
+			.filter(Boolean) as { topic: typeof allTopics[0]['data']; stats: { count: number; totalTime: number } }[];
 
-const pathData = paths.map(path => {
-	const steps = path.topics
-		.map(id => {
-			const topic = topicMap.get(id);
-			if (!topic) return null;
-			const stats = getTopicStats(id);
-			return { topic, stats };
-		})
-		.filter(Boolean) as { topic: typeof allTopics[0]['data']; stats: { count: number; totalTime: number } }[];
+		const totalQuestions = steps.reduce((sum, s) => sum + s.stats.count, 0);
+		const totalTime = steps.reduce((sum, s) => sum + s.stats.totalTime, 0);
 
-	const totalQuestions = steps.reduce((sum, s) => sum + s.stats.count, 0);
-	const totalTime = steps.reduce((sum, s) => sum + s.stats.totalTime, 0);
-
-	return { ...path, steps, totalQuestions, totalTime };
-});
+		return { ...path.data, steps, totalQuestions, totalTime };
+	});
 ---
 
 <Layout title="Learning Paths" description="Curated study tracks for frontend, backend, and full-stack interview preparation.">
