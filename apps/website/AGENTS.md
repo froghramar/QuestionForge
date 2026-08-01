@@ -20,3 +20,4 @@ npm run dev --prefix apps/website
 - [Astro Content Collections](https://docs.astro.build/en/guides/content-collections/)
 - [Tailwind CSS v4](https://tailwindcss.com/docs/)
 - [Pagefind Search](https://pagefind.app/)
+- [Supabase Auth](https://supabase.com/docs/guides/auth)

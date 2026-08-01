@@ -8,10 +8,30 @@ QuestionForge is the Wikipedia of technical interview knowledge. It is a communi
 
 # Principles
 
-* **Static First:** No databases or APIs. Git is the single source of truth.
+* **Static First (Hybrid):** Core content is managed via Git. Dynamic features (Auth, Bookmarks) use Supabase.
 * **Content Portability:** All content is written in Markdown (MDX) with strict schema validation.
 * **Stable IDs:** Every entity (Category, Tech, Topic, Question, etc.) has a unique, stable ID for referential integrity.
 * **No Duplication:** Use **Concepts** for reusable knowledge and **Variants** for technology-specific answers to the same question.
+
+---
+
+# Setup
+
+1. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Environment Variables:**
+   Create a `.env` file in `apps/website/` based on `.env.example`:
+   ```bash
+   PUBLIC_SUPABASE_URL=your-supabase-url
+   PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   ```
+
+3. **Supabase Auth Configuration:**
+   - Enable **GitHub** and **Google** providers in your Supabase dashboard.
+   - Set the Redirect URL to your local dev environment (e.g., `http://localhost:4321`).
 
 ---
 
@@ -58,6 +78,7 @@ Category (e.g., Backend)
 
 * Astro (Static Site Generation)
 * React (Interactive Components)
+* Supabase (Auth & Bookmarks)
 * Tailwind CSS (Styling)
 * TypeScript (Type Safety)
 * Pagefind (Client-side Search)

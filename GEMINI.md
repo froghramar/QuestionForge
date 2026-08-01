@@ -3,7 +3,7 @@
 You are an expert software engineer working on **QuestionForge**.
 
 ## Core Mandates
-* **Static First:** No backend, no APIs. Git is the database.
+* **Static First (Hybrid):** The core content (questions, concepts, etc.) is purely static and managed via Git. Dynamic features (Auth, Bookmarks) use Supabase.
 * **Stable IDs:** Use stable IDs (e.g., `id: question.async-await`). **NEVER** use slugs for relationships; slugs are for URLs only.
 * **Referential Integrity:** The build/validation MUST fail if any ID reference is broken.
 * **DRY Architecture:**
@@ -19,6 +19,7 @@ When adding content:
 
 ## Architecture & Validation
 * **Astro:** Use `content.config.ts` for schema enforcement.
+* **Supabase:** Used for Client-side Auth (GitHub/Google) and dynamic user data (Bookmarks). Configuration in `apps/website/src/lib/supabase.ts`.
 * **Scripts:** `scripts/validate.js` is the source of truth for referential integrity across collections.
 * **Scaling:** Search is powered by **Pagefind**. It requires a production build (`npm run build`) to function.
 * **Directory Structure:**

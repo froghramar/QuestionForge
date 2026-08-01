@@ -27,6 +27,15 @@ To handle thousands of questions while maintaining a fast, static-first experien
 *   **ID:** Immutable, unique identifier (e.g., `id: question.async-await`). Used for all internal links and validation.
 *   **Slug:** Mutable, URL-friendly string (e.g., `slug: what-is-async-await`). Used only for routing.
 
+### Hybrid Dynamic Layer (Supabase)
+
+While the content catalog is static, QuestionForge uses **Supabase** to provide dynamic features for users:
+*   **Authentication:** Managed via Supabase Auth (GitHub and Google OAuth).
+*   **Bookmarks:** User-specific bookmarks are stored in Supabase, linked to the **Stable ID** of the question.
+*   **Progress Tracking:** (Future) Tracking which questions a user has mastered.
+
+The dynamic layer is implemented entirely on the client side to maintain the benefits of a static site (fast initial load, SEO) while providing personalized features.
+
 ### Why Question Variants?
 
 Traditional interview sites duplicate questions for every language (e.g., "Async in C#" and "Async in JS" as separate entities). 
