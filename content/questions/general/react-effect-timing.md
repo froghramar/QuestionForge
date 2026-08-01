@@ -7,9 +7,21 @@ topic: topic.react-fundamentals
 concepts:
   - concept.browser-rendering
 companies:
-  - company.microsoft
+  - company.meta
+  - company.google
+  - company.stripe
 estimated_time: 15
 updated: 2026-08-01
 ---
-# Question
-What is the difference between `useEffect` and `useLayoutEffect` in React? When should you choose one over the other, and what are the performance implications of blocking the browser's paint?
+
+## Why This Is Asked
+
+This tests deep knowledge of React's rendering pipeline and the browser paint cycle. Interviewers want to know if you understand when each hook fires relative to the browser paint, and whether you can identify the specific scenarios where `useLayoutEffect` is necessary (DOM measurements, flicker prevention).
+
+## Key Concepts
+
+- `useEffect` fires asynchronously after the browser has painted — it does not block visual updates
+- `useLayoutEffect` fires synchronously after DOM mutations but before the browser paints
+- Use `useLayoutEffect` when you need to measure or mutate the DOM before the user sees it (e.g., tooltips, scroll position, animations)
+- `useLayoutEffect` blocks the paint, so heavy computation in it causes visible jank
+- `useLayoutEffect` doesn't run on the server — using it in SSR components triggers warnings

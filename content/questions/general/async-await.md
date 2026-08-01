@@ -1,6 +1,6 @@
 ---
 id: question.async-await
-title: What is async/await?
+title: async/await
 slug: async-await
 difficulty: Medium
 topic: topic.async-programming
@@ -8,16 +8,20 @@ concepts:
   - concept.asynchrony
 companies:
   - company.microsoft
+  - company.google
+  - company.amazon
 estimated_time: 10
-updated: 2026-07-31
+updated: 2026-08-01
 ---
 
-# Question
+## Why This Is Asked
 
-Explain the concept of async/await. How does it improve application performance or responsiveness?
+Interviewers use this to gauge whether you understand asynchronous programming beyond syntax — specifically how the runtime schedules work, what happens to the thread during an `await`, and whether you can reason about concurrency pitfalls.
 
----
+## Key Concepts
 
-# General Context
-
-Async/await is a syntactic sugar over asynchronous operations...
+- `async`/`await` is syntactic sugar over Promises (JS) or Tasks (.NET), not a threading mechanism
+- The `await` keyword yields control back to the caller and resumes after the awaited operation completes
+- Does not create new threads — it frees the current thread to do other work during I/O
+- Error handling via try/catch wraps rejected promises or faulted tasks
+- Sequential vs concurrent awaiting (`await a; await b` vs `await Promise.all([a, b])`)

@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allTopics = await getCollection('topics');
+const allQuestions = await getCollection('questions');
+
+const topicMap = new Map(allTopics.map(t => [t.data.id, t.data]));
+
+// Count questions and estimate time per topic
+function getTopicStats(topicId: string) {
+	const questions = allQuestions.filter(q => q.data.topic === topicId);
+	const totalTime = questions.reduce((sum, q) => sum + q.data.estimated_time, 0);
+	return { count: questions.length, totalTime };
+}
+
+// Define learning paths from existing data
+const paths = [
+	{
+		title: 'Frontend Engineering',
+		description: 'From type systems to React internals — everything a frontend engineer needs.',
+		color: 'var(--color-cat-frontend)',
+		topics: ['topic.type-systems', 'topic.react-fundamentals'],
+	},
+	{
+		title: 'Backend Engineering',
+		description: 'Design patterns, async programming, databases, and distributed systems.',
+		color: 'var(--color-cat-backend)',
+		topics: ['topic.design-patterns', 'topic.async-programming', 'topic.database-fundamentals', 'topic.distributed-systems'],
+	},
+	{
+		title: 'Full Stack',
+		description: 'The complete path — frontend foundations through backend and system design.',
+		color: 'var(--color-accent)',
+		topics: ['topic.type-systems', 'topic.react-fundamentals', 'topic.design-patterns', 'topic.async-programming', 'topic.database-fundamentals', 'topic.distributed-systems'],
+	},
+];
+
+const pathData = paths.map(path => {
+	const steps = path.topics
+		.map(id => {
+			const topic = topicMap.get(id);
+			if (!topic) return null;
+			const stats = getTopicStats(id);
+			return { topic, stats };
+		})
+		.filter(Boolean) as { topic: typeof allTopics[0]['data']; stats: { count: number; totalTime: number } }[];
+
+	const totalQuestions = steps.reduce((sum, s) => sum + s.stats.count, 0);
+	const totalTime = steps.reduce((sum, s) => sum + s.stats.totalTime, 0);
+
+	return { ...path, steps, totalQuestions, totalTime };
+});
+---
+
+<Layout title="Learning Paths" description="Curated study tracks for frontend, backend, and full-stack interview preparation.">
+	<div class="page-header">
+		<h1 class="page-header__title">Learning Paths</h1>
+		<p class="page-header__subtitle">Curated study tracks to guide your preparation</p>
+	</div>
+
+	<div style="display: grid; gap: 1.5rem;">
+		{pathData.map(path => (
+			<div class="path-card">
+				<div class="path-card__header">
+					<div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+						<div style={`width: 4px; height: 24px; border-radius: 2px; background: ${path.color};`}></div>
+						<h2 class="path-card__title">{path.title}</h2>
+					</div>
+					<p class="path-card__desc">{path.description}</p>
+					<div class="path-card__stats">
+						<span class="path-card__stat"><strong>{path.steps.length}</strong> topics</span>
+						<span class="path-card__stat"><strong>{path.totalQuestions}</strong> questions</span>
+						<span class="path-card__stat">~<strong>{path.totalTime}</strong> min total</span>
+					</div>
+				</div>
+				<ol class="path-card__steps">
+					{path.steps.map((step, i) => (
+						<a href={`/topics/${step.topic.slug}`} class="path-card__step">
+							<span class="path-card__step-number">{i + 1}</span>
+							<div class="path-card__step-info">
+								<div class="path-card__step-title">{step.topic.title}</div>
+								<div class="path-card__step-meta">{step.stats.count} questions · ~{step.stats.totalTime} min</div>
+							</div>
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--color-text-tertiary); flex-shrink: 0;"><polyline points="9,18 15,12 9,6"/></svg>
+						</a>
+					))}
+				</ol>
+			</div>
+		))}
+	</div>
+</Layout>

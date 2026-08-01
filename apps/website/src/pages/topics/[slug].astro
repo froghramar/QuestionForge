@@ -1,0 +1,122 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const topics = await getCollection('topics');
+	return topics.map((topic) => ({
+		params: { slug: topic.data.slug },
+		props: { topic },
+	}));
+}
+
+const { topic } = Astro.props;
+
+const allQuestions = await getCollection('questions');
+const allConcepts = await getCollection('concepts');
+const allCategories = await getCollection('categories');
+const allVariants = await getCollection('variants');
+const allTechnologies = await getCollection('technologies');
+
+const category = allCategories.find(c => c.data.id === topic.data.category);
+
+const topicQuestions = allQuestions
+	.filter(q => q.data.topic === topic.data.id);
+
+const topicConcepts = allConcepts.filter(c => c.data.topic === topic.data.id);
+
+const techMap = new Map(allTechnologies.map(t => [t.data.id, t.data]));
+
+// Build question -> techs map
+const questionTechMap = new Map<string, string[]>();
+allVariants.forEach(v => {
+	const techs = questionTechMap.get(v.data.question) || [];
+	const tech = techMap.get(v.data.technology);
+	if (tech) techs.push(tech.name);
+	questionTechMap.set(v.data.question, techs);
+});
+
+// Sort by difficulty
+const diffOrder: Record<string, number> = { Beginner: 0, Easy: 1, Medium: 2, Hard: 3, Expert: 4 };
+const sortedQuestions = topicQuestions.sort((a, b) =>
+	(diffOrder[a.data.difficulty] || 0) - (diffOrder[b.data.difficulty] || 0)
+);
+
+// Render concepts
+const renderedConcepts = await Promise.all(topicConcepts.map(async (concept) => {
+	const { Content } = await render(concept);
+	return { ...concept, Content };
+}));
+
+function getDifficultyClass(diff: string): string {
+	return `badge--${diff.toLowerCase()}`;
+}
+---
+
+<Layout title={topic.data.title} description={topic.data.description || `Interview questions about ${topic.data.title}.`}>
+	<nav class="breadcrumbs" aria-label="Breadcrumb">
+		<a href="/topics">Topics</a>
+		<span class="breadcrumbs__separator">/</span>
+		{category && (
+			<>
+				<span style="color: var(--color-text-secondary);">{category.data.title}</span>
+				<span class="breadcrumbs__separator">/</span>
+			</>
+		)}
+		<span class="breadcrumbs__current">{topic.data.title}</span>
+	</nav>
+
+	<header class="page-header">
+		<h1 class="page-header__title">{topic.data.title}</h1>
+		{topic.data.description && <p class="page-header__subtitle">{topic.data.description}</p>}
+	</header>
+
+	{renderedConcepts.length > 0 && (
+		<section style="margin-bottom: 2.5rem;">
+			<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 1rem;">Key Concepts</h2>
+			<div style="display: grid; gap: 0.75rem;">
+				{renderedConcepts.map(({ data, Content }) => (
+					<details class="collapsible">
+						<summary class="collapsible__trigger">
+							<span>{data.title}</span>
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+						</summary>
+						<div class="collapsible__content prose">
+							<Content />
+						</div>
+					</details>
+				))}
+			</div>
+		</section>
+	)}
+
+	<section>
+		<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 1rem;">
+			Questions <span style="font-weight: 400;">({sortedQuestions.length})</span>
+		</h2>
+		<div class="question-grid stagger-children">
+			{sortedQuestions.map((question) => {
+				const techs = questionTechMap.get(question.data.id) || [];
+				return (
+					<a href={`/questions/${question.id}`} class="card card--interactive">
+						<div class="card__header">
+							<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
+							<span class="question-card__time">
+								<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+								{question.data.estimated_time}m
+							</span>
+						</div>
+						<h3 class="card__title">{question.data.title}</h3>
+						<div class="card__meta">
+							<div class="question-card__techs">
+								{techs.map(tech => (
+									<span class="badge badge--tech">{tech}</span>
+								))}
+							</div>
+						</div>
+					</a>
+				);
+			})}
+		</div>
+	</section>
+</Layout>

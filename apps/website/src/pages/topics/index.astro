@@ -1,0 +1,101 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allTopics = await getCollection('topics');
+const allCategories = await getCollection('categories');
+const allQuestions = await getCollection('questions');
+
+const categoryMap = new Map(allCategories.map(c => [c.data.id, c.data]));
+
+// Count questions per topic and build difficulty distribution
+type TopicInfo = {
+	topic: typeof allTopics[0]['data'];
+	slug: string;
+	questionCount: number;
+	difficulties: Record<string, number>;
+};
+
+const topicsByCategory = new Map<string, TopicInfo[]>();
+
+allTopics.forEach(t => {
+	const topicQuestions = allQuestions.filter(q => q.data.topic === t.data.id);
+	const difficulties: Record<string, number> = {};
+	topicQuestions.forEach(q => {
+		difficulties[q.data.difficulty] = (difficulties[q.data.difficulty] || 0) + 1;
+	});
+
+	const info: TopicInfo = {
+		topic: t.data,
+		slug: t.data.slug,
+		questionCount: topicQuestions.length,
+		difficulties,
+	};
+
+	const catId = t.data.category;
+	const list = topicsByCategory.get(catId) || [];
+	list.push(info);
+	topicsByCategory.set(catId, list);
+});
+
+const diffColors: Record<string, string> = {
+	Beginner: 'var(--color-diff-beginner)',
+	Easy: 'var(--color-diff-easy)',
+	Medium: 'var(--color-diff-medium)',
+	Hard: 'var(--color-diff-hard)',
+	Expert: 'var(--color-diff-expert)',
+};
+
+const diffOrder = ['Beginner', 'Easy', 'Medium', 'Hard', 'Expert'];
+---
+
+<Layout title="Topics" description="Browse interview topics organized by category. Each topic contains curated questions with difficulty progression.">
+	<div class="page-header">
+		<h1 class="page-header__title">Topics</h1>
+		<p class="page-header__subtitle">Interview areas organized by category</p>
+	</div>
+
+	{allCategories.map(cat => {
+		const topics = topicsByCategory.get(cat.data.id) || [];
+		if (topics.length === 0) return null;
+		return (
+			<div class="category-section">
+				<h2 class="category-section__title">
+					<span class={`badge ${cat.data.id === 'category.frontend' ? 'badge--frontend' : 'badge--backend'}`} style="margin-right: 0.5rem; vertical-align: middle;">
+						{cat.data.title}
+					</span>
+					<span style="font-weight: 400; text-transform: none; letter-spacing: normal; color: var(--color-text-tertiary);">{cat.data.description}</span>
+				</h2>
+
+				<div class="topic-grid stagger-children">
+					{topics.map(({ topic, slug, questionCount, difficulties }) => (
+						<a href={`/topics/${slug}`} class="card card--interactive">
+							<h3 class="card__title" style="font-size: 1.125rem; margin-bottom: 0.25rem;">{topic.title}</h3>
+							{topic.description && (
+								<p style="font-size: 0.8125rem; color: var(--color-text-secondary); margin: 0 0 0.75rem; line-height: 1.5;">{topic.description}</p>
+							)}
+							<span class="topic-card__count">{questionCount} questions</span>
+
+							{questionCount > 0 && (
+								<div class="topic-card__bar">
+									{diffOrder.map(diff => {
+										const count = difficulties[diff] || 0;
+										if (count === 0) return null;
+										const pct = (count / questionCount) * 100;
+										return (
+											<div
+												class="topic-card__bar-segment"
+												style={`width: ${pct}%; background: ${diffColors[diff]};`}
+												title={`${diff}: ${count}`}
+											/>
+										);
+									})}
+								</div>
+							)}
+						</a>
+					))}
+				</div>
+			</div>
+		);
+	})}
+</Layout>

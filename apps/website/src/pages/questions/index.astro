@@ -1,52 +1,114 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 const allQuestions = await getCollection('questions');
+const allVariants = await getCollection('variants');
+const allTopics = await getCollection('topics');
+const allCategories = await getCollection('categories');
+const allTechnologies = await getCollection('technologies');
 
-// Fetch topics to display names
-const topics = await getCollection('topics');
-const topicMap = new Map(topics.map(t => [t.data.id, t.data]));
+const topicMap = new Map(allTopics.map(t => [t.data.id, t.data]));
+const categoryMap = new Map(allCategories.map(c => [c.data.id, c.data]));
+const techMap = new Map(allTechnologies.map(t => [t.data.id, t.data]));
+
+// Build question -> techs map
+const questionTechMap = new Map<string, string[]>();
+allVariants.forEach(v => {
+	const techs = questionTechMap.get(v.data.question) || [];
+	const tech = techMap.get(v.data.technology);
+	if (tech) techs.push(tech.name);
+	questionTechMap.set(v.data.question, techs);
+});
+
+// Group questions by topic, then by category
+const diffOrder: Record<string, number> = { Beginner: 0, Easy: 1, Medium: 2, Hard: 3, Expert: 4 };
+
+type TopicGroup = {
+	topic: typeof allTopics[0]['data'];
+	questions: typeof allQuestions;
+};
+
+type CategoryGroup = {
+	category: typeof allCategories[0]['data'];
+	topicGroups: TopicGroup[];
+};
+
+const categoryGroups: CategoryGroup[] = [];
+
+// Build groups
+const topicsByCategory = new Map<string, typeof allTopics>();
+allTopics.forEach(t => {
+	const list = topicsByCategory.get(t.data.category) || [];
+	list.push(t);
+	topicsByCategory.set(t.data.category, list);
+});
+
+allCategories.forEach(cat => {
+	const catTopics = topicsByCategory.get(cat.data.id) || [];
+	const topicGroups: TopicGroup[] = catTopics.map(topic => ({
+		topic: topic.data,
+		questions: allQuestions
+			.filter(q => q.data.topic === topic.data.id)
+			.sort((a, b) => (diffOrder[a.data.difficulty] || 0) - (diffOrder[b.data.difficulty] || 0)),
+	})).filter(tg => tg.questions.length > 0);
+
+	if (topicGroups.length > 0) {
+		categoryGroups.push({ category: cat.data, topicGroups });
+	}
+});
+
+function getDifficultyClass(diff: string): string {
+	return `badge--${diff.toLowerCase()}`;
+}
 ---
 
-<Layout title="All Questions">
-	<div class="py-8">
-		<div class="flex justify-between items-center mb-8">
-			<h1 class="text-3xl font-bold text-gray-900">Interview Questions</h1>
-		</div>
-		
-		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{allQuestions.map((question) => {
-				const topic = topicMap.get(question.data.topic);
-				return (
-					<a href={`/questions/${question.id}`} class="flex flex-col p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-						<div class="flex justify-between items-start mb-4">
-							<span class={`px-2 py-1 text-xs font-semibold rounded ${
-								question.data.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
-								question.data.difficulty === 'Easy' ? 'bg-blue-100 text-blue-800' :
-								question.data.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-								question.data.difficulty === 'Hard' ? 'bg-orange-100 text-orange-800' :
-								'bg-red-100 text-red-800'
-							}`}>
-								{question.data.difficulty}
-							</span>
-							<span class="text-xs text-gray-500 font-medium uppercase tracking-wider">{topic?.title || 'Unknown Topic'}</span>
-						</div>
-						<h2 class="text-xl font-bold text-gray-900 mb-2 flex-grow">{question.data.title}</h2>
-						
-						<div class="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
-							<span class="text-sm text-gray-500">{question.data.estimated_time} mins</span>
-							<div class="flex -space-x-2">
-								{question.data.companies.slice(0, 3).map((_) => (
-									<div class="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-[10px] font-bold text-gray-400">
-										C
-									</div>
-								))}
-							</div>
-						</div>
-					</a>
-				);
-			})}
-		</div>
+<Layout title="All Questions" description="Browse all interview questions grouped by category and topic.">
+	<div class="page-header">
+		<h1 class="page-header__title">All Questions</h1>
+		<p class="page-header__subtitle">{allQuestions.length} questions across {allTopics.length} topics</p>
 	</div>
+
+	{categoryGroups.map(({ category, topicGroups }) => (
+		<div class="category-section">
+			<h2 class="category-section__title">
+				<span class={`badge ${category.id === 'category.frontend' ? 'badge--frontend' : 'badge--backend'}`} style="margin-right: 0.5rem; vertical-align: middle;">
+					{category.title}
+				</span>
+			</h2>
+
+			{topicGroups.map(({ topic, questions }) => (
+				<div style="margin-bottom: 1.5rem;">
+					<h3 style="font-size: 1rem; font-weight: 600; color: var(--color-text-primary); margin: 0 0 0.75rem;">
+						<a href={`/topics/${topic.slug}`} style="color: inherit; border-bottom: 1px dashed var(--color-border-default);">{topic.title}</a>
+						<span style="color: var(--color-text-tertiary); font-weight: 400; font-size: 0.8125rem; margin-left: 0.5rem;">{questions.length} questions</span>
+					</h3>
+					<div class="question-grid stagger-children">
+						{questions.map((question) => {
+							const techs = questionTechMap.get(question.data.id) || [];
+							return (
+								<a href={`/questions/${question.id}`} class="card card--interactive">
+									<div class="card__header">
+										<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
+										<span class="question-card__time">
+											<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+											{question.data.estimated_time}m
+										</span>
+									</div>
+									<h2 class="card__title">{question.data.title}</h2>
+									<div class="card__meta">
+										<div class="question-card__techs">
+											{techs.map(tech => (
+												<span class="badge badge--tech">{tech}</span>
+											))}
+										</div>
+									</div>
+								</a>
+							);
+						})}
+					</div>
+				</div>
+			))}
+		</div>
+	))}
 </Layout>

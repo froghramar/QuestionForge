@@ -1,85 +1,109 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+
+const allQuestions = await getCollection('questions');
+const allVariants = await getCollection('variants');
+const allTopics = await getCollection('topics');
+const allTechnologies = await getCollection('technologies');
+
+const topicMap = new Map(allTopics.map(t => [t.data.id, t.data]));
+const techMap = new Map(allTechnologies.map(t => [t.data.id, t.data]));
+
+// Build a map of question ID -> tech names from variants
+const questionTechMap = new Map<string, string[]>();
+allVariants.forEach(v => {
+	const techs = questionTechMap.get(v.data.question) || [];
+	const tech = techMap.get(v.data.technology);
+	if (tech) techs.push(tech.name);
+	questionTechMap.set(v.data.question, techs);
+});
+
+// Get unique topics and difficulties for filters
+const topics = [...new Set(allQuestions.map(q => q.data.topic))].map(id => topicMap.get(id)).filter(Boolean);
+const difficulties = ['Beginner', 'Easy', 'Medium', 'Hard', 'Expert'];
+
+// Sort questions: by difficulty order, then title
+const diffOrder: Record<string, number> = { Beginner: 0, Easy: 1, Medium: 2, Hard: 3, Expert: 4 };
+const sortedQuestions = [...allQuestions].sort((a, b) => (diffOrder[a.data.difficulty] || 0) - (diffOrder[b.data.difficulty] || 0));
+
+function getDifficultyClass(diff: string): string {
+	return `badge--${diff.toLowerCase()}`;
+}
 ---
 
-<Layout title="Home">
-	<div class="py-12">
-		<div class="text-center">
-			<h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-				<span class="block">The Wikipedia of</span>
-				<span class="block text-indigo-600">Technical Interview Knowledge</span>
-			</h1>
-			<p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-				QuestionForge is an open-source, community-driven interview knowledge base. 
-				Static-first, offline-friendly, and searchable.
-			</p>
-			<div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-				<div class="rounded-md shadow">
-					<a href="/questions" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
-						Browse Questions
-					</a>
-				</div>
-				<div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-					<a href="https://github.com/froghramar/QuestionForge" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10">
-						Contribute
-					</a>
-				</div>
-			</div>
-		</div>
+<Layout title="Questions" description="Open-source interview questions for developers. Browse by topic, difficulty, and technology.">
+	<div class="page-header">
+		<h1 class="page-header__title">Interview Questions</h1>
+		<p class="page-header__subtitle">Open-source, community-reviewed questions for developers</p>
 	</div>
 
-	<div class="mt-24">
-		<div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-			<div class="pt-6">
-				<div class="flow-root bg-gray-50 rounded-lg px-6 pb-8">
-					<div class="-mt-6">
-						<div class="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
-							<!-- Heroicon name: outline/cloud-upload -->
-							<svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-							</svg>
-						</div>
-						<h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">Static First</h3>
-						<p class="mt-5 text-base text-gray-500">
-							No databases, no APIs. Everything is pre-built and served as static files for maximum speed and availability.
-						</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="pt-6">
-				<div class="flow-root bg-gray-50 rounded-lg px-6 pb-8">
-					<div class="-mt-6">
-						<div class="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
-							<!-- Heroicon name: outline/search -->
-							<svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-							</svg>
-						</div>
-						<h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">Searchable</h3>
-						<p class="mt-5 text-base text-gray-500">
-							Instant, offline-ready search powered by local indices. Find exactly what you need in milliseconds.
-						</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="pt-6">
-				<div class="flow-root bg-gray-50 rounded-lg px-6 pb-8">
-					<div class="-mt-6">
-						<div class="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
-							<!-- Heroicon name: outline/users -->
-							<svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 01-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-							</svg>
-						</div>
-						<h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">Community Driven</h3>
-						<p class="mt-5 text-base text-gray-500">
-							Built by developers, for developers. Every question is reviewed through pull requests to ensure quality.
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div class="filter-bar" id="filter-bar">
+		<button class="filter-btn filter-btn--active" data-filter="all">All</button>
+		{difficulties.map(diff => (
+			<button class={`filter-btn`} data-filter={`diff:${diff}`}>{diff}</button>
+		))}
+		{topics.map(topic => topic && (
+			<button class="filter-btn" data-filter={`topic:${topic.id}`}>{topic.title}</button>
+		))}
 	</div>
+
+	<div class="question-grid stagger-children" id="question-grid">
+		{sortedQuestions.map((question) => {
+			const topic = topicMap.get(question.data.topic);
+			const techs = questionTechMap.get(question.data.id) || [];
+			return (
+				<a href={`/questions/${question.id}`}
+				   class="card card--interactive"
+				   data-difficulty={question.data.difficulty}
+				   data-topic={question.data.topic}>
+					<div class="card__header">
+						<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
+						<span class="question-card__time">
+							<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+							{question.data.estimated_time}m
+						</span>
+					</div>
+					<h2 class="card__title">{question.data.title}</h2>
+					<div class="card__meta">
+						{topic && <span class="badge badge--topic">{topic.title}</span>}
+						<div class="question-card__techs">
+							{techs.map(tech => (
+								<span class="badge badge--tech">{tech}</span>
+							))}
+						</div>
+					</div>
+				</a>
+			);
+		})}
+	</div>
+
+	<script>
+		const filterBar = document.getElementById('filter-bar');
+		const grid = document.getElementById('question-grid');
+		if (filterBar && grid) {
+			const buttons = filterBar.querySelectorAll<HTMLButtonElement>('.filter-btn');
+			const cards = grid.querySelectorAll<HTMLElement>('.card');
+
+			buttons.forEach(btn => {
+				btn.addEventListener('click', () => {
+					buttons.forEach(b => b.classList.remove('filter-btn--active'));
+					btn.classList.add('filter-btn--active');
+
+					const filter = btn.dataset.filter || 'all';
+					cards.forEach(card => {
+						if (filter === 'all') {
+							card.style.display = '';
+							return;
+						}
+						const [type, value] = filter.split(':');
+						const match = type === 'diff'
+							? card.dataset.difficulty === value
+							: card.dataset.topic === value;
+						card.style.display = match ? '' : 'none';
+					});
+				});
+			});
+		}
+	</script>
 </Layout>

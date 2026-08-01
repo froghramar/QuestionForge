@@ -13,23 +13,21 @@ export async function getStaticPaths() {
 const { question } = Astro.props;
 const { Content } = await render(question);
 
-// Fetch all collections needed for lookup
 const allTopics = await getCollection('topics');
 const allConcepts = await getCollection('concepts');
 const allVariants = await getCollection('variants');
 const allTechnologies = await getCollection('technologies');
+const allCompanies = await getCollection('companies');
 
-// Lookup by custom stable ID
 const topic = allTopics.find(t => t.data.id === question.data.topic);
 const questionVariants = allVariants.filter(v => v.data.question === question.data.id);
-
 const techMap = new Map(allTechnologies.map(t => [t.data.id, t.data]));
+const companyMap = new Map(allCompanies.map(c => [c.data.id, c.data]));
 
-const relatedConcepts = question.data.concepts 
+const relatedConcepts = question.data.concepts
 	? question.data.concepts.map(id => allConcepts.find(c => c.data.id === id)).filter(Boolean)
 	: [];
 
-// Prepare variants with their rendered content
 const renderedVariants = await Promise.all(questionVariants.map(async (variant) => {
 	const { Content: VariantContent } = await render(variant);
 	return {
@@ -38,102 +36,146 @@ const renderedVariants = await Promise.all(questionVariants.map(async (variant) 
 		tech: techMap.get(variant.data.technology)
 	};
 }));
+
+function getDifficultyClass(diff: string): string {
+	return `badge--${diff.toLowerCase()}`;
+}
 ---
 
-<Layout title={question.data.title}>
-	<article class="max-w-4xl mx-auto py-8">
-		<nav class="flex mb-8 text-sm text-gray-500" aria-label="Breadcrumb">
-			<ol class="flex items-center space-x-2">
-				<li><a href="/" class="hover:text-indigo-600">Home</a></li>
-				<li><span class="mx-2">/</span></li>
-				<li><a href="/questions" class="hover:text-indigo-600">Questions</a></li>
-				<li><span class="mx-2">/</span></li>
-				<li class="font-medium text-gray-900">{question.data.title}</li>
-			</ol>
-		</nav>
+<Layout title={question.data.title} description={`Interview question: ${question.data.title}. ${question.data.difficulty} difficulty, ${question.data.estimated_time} minutes.`}>
+	<nav class="breadcrumbs" aria-label="Breadcrumb">
+		<a href="/">Questions</a>
+		<span class="breadcrumbs__separator">/</span>
+		{topic && (
+			<>
+				<a href={`/topics/${topic.data.slug}`}>{topic.data.title}</a>
+				<span class="breadcrumbs__separator">/</span>
+			</>
+		)}
+		<span class="breadcrumbs__current">{question.data.title}</span>
+	</nav>
 
-		<header class="mb-12">
-			<div class="flex flex-wrap items-center gap-4 mb-6">
-				<span class={`px-3 py-1 text-sm font-semibold rounded ${
-					question.data.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
-					question.data.difficulty === 'Easy' ? 'bg-blue-100 text-blue-800' :
-					question.data.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-					question.data.difficulty === 'Hard' ? 'bg-orange-100 text-orange-800' :
-					'bg-red-100 text-red-800'
-				}`}>
-					{question.data.difficulty}
+	<article style="max-width: 800px;">
+		<header style="margin-bottom: 2rem;">
+			<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+				<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
+				<span style="font-size: 0.8125rem; color: var(--color-text-tertiary);">
+					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -1px; margin-right: 2px;"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+					{question.data.estimated_time} min
 				</span>
-				<span class="text-gray-500">Topic: <span class="font-medium text-gray-900">{topic?.data.title || 'Unknown'}</span></span>
-				<span class="text-gray-500">Time: <span class="font-medium text-gray-900">{question.data.estimated_time} mins</span></span>
+				{topic && (
+					<a href={`/topics/${topic.data.slug}`} class="badge badge--topic">{topic.data.title}</a>
+				)}
 			</div>
-			<h1 class="text-4xl font-extrabold text-gray-900 mb-4">{question.data.title}</h1>
-			
+			<h1 style="font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.5rem; line-height: 1.3;">{question.data.title}</h1>
+
 			{relatedConcepts.length > 0 && (
-				<div class="flex flex-wrap gap-2 mt-4">
+				<div style="display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.75rem;">
 					{relatedConcepts.map((concept) => concept && (
-						<span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-sm rounded-full border border-indigo-100">
-							{concept.data.title}
-						</span>
+						<span class="badge badge--tech">{concept.data.title}</span>
 					))}
 				</div>
 			)}
 		</header>
 
-		<div class="prose prose-indigo prose-lg max-w-none border-b border-gray-100 pb-12 mb-12">
+		<div class="prose" style="padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border-default);">
 			<Content />
 		</div>
 
 		{renderedVariants.length > 0 && (
-			<section class="mb-16">
-				<h2 class="text-2xl font-bold text-gray-900 mb-6">Answers by Technology</h2>
-				<div class="space-y-8">
-					{renderedVariants.map((variant) => {
-						const { VariantContent, tech } = variant;
-						return (
-							<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-								<div class="bg-gray-50 px-6 py-3 border-b border-gray-200 flex justify-between items-center">
-									<h3 class="font-bold text-gray-900">{tech?.name || 'General'}</h3>
+			<section style="margin-bottom: 3rem;">
+				<h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem;">Answers by Technology</h2>
+
+				{renderedVariants.length > 1 ? (
+					<>
+						<div class="tabs" id="variant-tabs">
+							{renderedVariants.map((variant, i) => (
+								<button
+									class={`tab ${i === 0 ? 'tab--active' : ''}`}
+									data-tab={`variant-${i}`}
+									type="button"
+								>
+									{variant.tech?.name || 'General'}
 									{variant.data.difficulty_override && (
-										<span class="text-xs font-medium text-gray-500 italic">Difficulty: {variant.data.difficulty_override}</span>
+										<span style="margin-left: 0.375rem; font-size: 0.6875rem; opacity: 0.6;">({variant.data.difficulty_override})</span>
 									)}
+								</button>
+							))}
+						</div>
+						{renderedVariants.map((variant, i) => {
+							const { VariantContent } = variant;
+							return (
+								<div class={`tab-panel ${i === 0 ? 'tab-panel--active' : ''}`} id={`variant-${i}`}>
+									<div class="prose">
+										<VariantContent />
+									</div>
 								</div>
-								<div class="p-6 prose prose-indigo max-w-none">
-									<VariantContent />
-								</div>
-							</div>
-						);
-					})}
-				</div>
+							);
+						})}
+					</>
+				) : (
+					<div style="border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); overflow: hidden;">
+						<div style="padding: 0.75rem 1rem; background: var(--color-surface-raised); border-bottom: 1px solid var(--color-border-default); font-family: var(--font-mono); font-size: 0.875rem; font-weight: 600;">
+							{renderedVariants[0].tech?.name || 'General'}
+						</div>
+						<div class="prose" style="padding: 1.25rem;">
+							<renderedVariants[0].VariantContent />
+						</div>
+					</div>
+				)}
 			</section>
 		)}
 
-		<footer class="mt-16 pt-8 border-t border-gray-200">
-			<div class="flex flex-wrap items-center justify-between gap-4">
+		<footer style="padding-top: 1.5rem; border-top: 1px solid var(--color-border-default);">
+			<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
 				<div>
-					<h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Companies</h3>
-					<div class="mt-2 flex flex-wrap gap-2">
-						{question.data.companies.map((companyId) => (
-							<span class="text-gray-900 font-medium">{companyId}</span>
-						))}
+					<h3 style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 0.375rem;">Asked at</h3>
+					<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+						{question.data.companies.map((companyId) => {
+							const company = companyMap.get(companyId);
+							return (
+								<span style="font-size: 0.875rem; color: var(--color-text-secondary); font-weight: 500;">
+									{company?.name || companyId}
+								</span>
+							);
+						})}
 					</div>
 				</div>
-				<div class="text-sm text-gray-500">
-					Last updated: {new Date(question.data.updated).toLocaleDateString()}
+				<div style="display: flex; align-items: center; gap: 1rem;">
+					<span style="font-size: 0.75rem; color: var(--color-text-tertiary);">
+						Updated {new Date(question.data.updated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+					</span>
+					<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/questions/general/${question.id}.md`}
+					   target="_blank"
+					   rel="noopener"
+					   style="font-size: 0.75rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 0.25rem;">
+						<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+						Edit
+					</a>
 				</div>
 			</div>
 		</footer>
 	</article>
-</Layout>
 
-<style is:global>
-	@reference "../../styles/global.css";
-	.prose h1 { @apply text-3xl font-bold mt-12 mb-6 pb-2 border-b border-gray-100; }
-	.prose h2 { @apply text-2xl font-bold mt-10 mb-4; }
-	.prose p { @apply my-4 leading-relaxed; }
-	.prose ul { @apply list-disc list-inside my-4; }
-	.prose li { @apply my-2; }
-	.prose code { @apply px-1.5 py-0.5 bg-gray-100 rounded text-indigo-600 font-mono text-sm; }
-	.prose pre { @apply p-4 bg-gray-900 text-gray-100 rounded-lg my-6 overflow-x-auto; }
-	.prose pre code { @apply bg-transparent text-gray-100 p-0; }
-	.prose hr { @apply my-12 border-gray-200; }
-</style>
+	<script>
+		const tabsContainer = document.getElementById('variant-tabs');
+		if (tabsContainer) {
+			const tabs = tabsContainer.querySelectorAll<HTMLButtonElement>('.tab');
+			tabs.forEach(tab => {
+				tab.addEventListener('click', () => {
+					// Deactivate all tabs and panels
+					tabs.forEach(t => t.classList.remove('tab--active'));
+					document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('tab-panel--active'));
+
+					// Activate clicked tab and its panel
+					tab.classList.add('tab--active');
+					const panelId = tab.dataset.tab;
+					if (panelId) {
+						const panel = document.getElementById(panelId);
+						if (panel) panel.classList.add('tab-panel--active');
+					}
+				});
+			});
+		}
+	</script>
+</Layout>
