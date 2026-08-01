@@ -1,0 +1,92 @@
+---
+---
+<div class="theme-switcher">
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+    <svg id="theme-icon-sun" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="17.78" x2="5.64" y2="16.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    <svg id="theme-icon-moon" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    <svg id="theme-icon-system" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .theme-switcher {
+    display: flex;
+    align-items: center;
+  }
+
+  .theme-toggle {
+    background: transparent;
+    border: 1px solid var(--color-border-default);
+    color: var(--color-text-secondary);
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+  }
+
+  .theme-toggle:hover {
+    background: var(--color-surface-raised);
+    color: var(--color-text-primary);
+    border-color: var(--color-text-secondary);
+  }
+
+  .theme-icon {
+    width: 16px;
+    height: 16px;
+    display: none;
+  }
+
+  /* Show icon based on data-theme-preference attribute on html */
+  :global(html[data-theme-preference="light"]) #theme-icon-sun { display: block; }
+  :global(html[data-theme-preference="dark"]) #theme-icon-moon { display: block; }
+  :global(html[data-theme-preference="system"]) #theme-icon-system { display: block; }
+</style>
+
+<script is:inline>
+  (() => {
+    const themes = ['system', 'light', 'dark'];
+    
+    const getNextTheme = (current) => {
+      const currentIndex = themes.indexOf(current);
+      return themes[(currentIndex + 1) % themes.length];
+    };
+
+    const updateTheme = (newTheme) => {
+      const root = document.documentElement;
+      localStorage.setItem('theme', newTheme);
+      
+      if (newTheme === 'system') {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        root.setAttribute('data-theme', systemTheme);
+      } else {
+        root.setAttribute('data-theme', newTheme);
+      }
+      
+      root.setAttribute('data-theme-preference', newTheme);
+    };
+
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme-preference') || 'system';
+      const nextTheme = getNextTheme(currentTheme);
+      updateTheme(nextTheme);
+    });
+
+    // Listen for system theme changes if set to 'system'
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (document.documentElement.getAttribute('data-theme-preference') === 'system') {
+        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      }
+    });
+  })();
+</script>
