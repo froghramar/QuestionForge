@@ -50,9 +50,14 @@ const diffOrder = ['Beginner', 'Easy', 'Medium', 'Hard', 'Expert'];
 ---
 
 <Layout title="Topics" description="Browse interview topics organized by category. Each topic contains curated questions with difficulty progression.">
-	<div class="page-header">
-		<h1 class="page-header__title">Topics</h1>
-		<p class="page-header__subtitle">Interview areas organized by category</p>
+	<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+		<div>
+			<h1 class="page-header__title">Topics</h1>
+			<p class="page-header__subtitle">Interview areas organized by category</p>
+		</div>
+		<a href="https://github.com/froghramar/QuestionForge/tree/main/content/topics" target="_blank" rel="noopener" class="filter-btn filter-btn--active" style="text-decoration: none; font-size: 0.8125rem;">
+			+ Propose Topic
+		</a>
 	</div>
 
 	{allCategories.map(cat => {

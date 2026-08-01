@@ -66,14 +66,24 @@ function getDifficultyClass(diff: string): string {
 		<span class="breadcrumbs__current">{topic.data.title}</span>
 	</nav>
 
-	<header class="page-header">
-		<h1 class="page-header__title">{topic.data.title}</h1>
-		{topic.data.description && <p class="page-header__subtitle">{topic.data.description}</p>}
+	<header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+		<div>
+			<h1 class="page-header__title">{topic.data.title}</h1>
+			{topic.data.description && <p class="page-header__subtitle">{topic.data.description}</p>}
+		</div>
+		<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/topics/${topic.data.slug}.md`} target="_blank" rel="noopener" class="filter-btn" style="text-decoration: none; font-size: 0.75rem;">
+			Edit Topic ✏️
+		</a>
 	</header>
 
 	{renderedConcepts.length > 0 && (
 		<section style="margin-bottom: 2.5rem;">
-			<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 1rem;">Key Concepts</h2>
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+				<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0;">Key Concepts</h2>
+				<a href="https://github.com/froghramar/QuestionForge/tree/main/content/concepts" target="_blank" rel="noopener" style="font-size: 0.75rem; color: var(--color-text-secondary); text-decoration: none;">
+					+ Add Concept
+				</a>
+			</div>
 			<div style="display: grid; gap: 0.75rem;">
 				{renderedConcepts.map(({ data, Content }) => (
 					<details class="collapsible">
@@ -83,6 +93,11 @@ function getDifficultyClass(diff: string): string {
 						</summary>
 						<div class="collapsible__content prose">
 							<Content />
+							<div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border-default); text-align: right;">
+								<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/concepts/${data.slug}.md`} target="_blank" rel="noopener" style="font-size: 0.75rem; color: var(--color-text-secondary); text-decoration: none;">
+									Improve this concept on GitHub ✏️
+								</a>
+							</div>
 						</div>
 					</details>
 				))}
