@@ -20,4 +20,11 @@ Understanding the decoupling of storage is vital for stateful applications. This
 - **Binding:** How Kubernetes matches claims to volumes.
 - **Reclaim Policy:** What happens to the data when the PVC is deleted (Retain vs. Delete).
 - **Dynamic Provisioning:** The role of the StorageClass.
+
+## Question Variations
+
+- "Explain the relationship between a PersistentVolume (PV) and a PersistentVolumeClaim (PVC)."
+- "What is a `StorageClass`, and how does it enable dynamic volume provisioning?"
+- "What happens to the underlying data when a PVC is deleted, and how does the `reclaimPolicy` affect this?"
+- "Can multiple Pods share the same PersistentVolume? Under what conditions?"
 ---

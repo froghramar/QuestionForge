@@ -14,6 +14,15 @@ export async function getStaticPaths() {
 const { question } = Astro.props;
 const { Content } = await render(question);
 
+// Extract variations from raw body
+const variationsMatch = question.body?.split('## Question Variations');
+const variationsRaw = variationsMatch && variationsMatch.length > 1 ? variationsMatch[1] : '';
+const variations = variationsRaw
+	.split('\n')
+	.map(line => line.trim())
+	.filter(line => line.startsWith('- '))
+	.map(line => line.replace('- ', ''));
+
 const allTopics = await getCollection('topics');
 const allConcepts = await getCollection('concepts');
 const allVariants = await getCollection('variants');
@@ -63,7 +72,7 @@ function getDifficultyClass(diff: string): string {
 		<span class="breadcrumbs__current">{question.data.title}</span>
 	</nav>
 
-	<article style="max-width: 900px;">
+	<article style="max-width: 1200px;">
 		<header style="margin-bottom: 2rem;">
 			<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border-subtle);">
 				<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;">
@@ -106,68 +115,174 @@ function getDifficultyClass(diff: string): string {
 			)}
 		</header>
 
-		<div class="prose" style="padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border-default);">
-			<Content />
-		</div>
-
-		{renderedVariants.length > 0 && (
-			<section style="margin-bottom: 3rem;">
-				<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-					<h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Answers by Technology</h2>
-					<a href="https://github.com/froghramar/QuestionForge/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener" class="filter-btn" style="font-size: 0.75rem; text-decoration: none;">
-						+ Add Variant
-					</a>
+		<div class="question-layout">
+			<div class="question-main">
+				<div class="prose question-content" style="padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border-default);">
+					<Content />
 				</div>
 
-				{renderedVariants.length > 1 ? (
-					<>
-						<div class="tabs" id="variant-tabs">
-							{renderedVariants.map((variant, i) => (
-								<button
-									class={`tab ${i === 0 ? 'tab--active' : ''}`}
-									data-tab={`variant-${i}`}
-									type="button"
-								>
-									{variant.tech?.name || 'General'}
-									{variant.data.difficulty_override && (
-										<span style="margin-left: 0.375rem; font-size: 0.6875rem; opacity: 0.6;">({variant.data.difficulty_override})</span>
-									)}
-								</button>
-							))}
+				{renderedVariants.length > 0 && (
+					<section style="margin-bottom: 3rem;">
+						<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+							<h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Answers by Technology</h2>
+							<a href="https://github.com/froghramar/QuestionForge/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener" class="filter-btn" style="font-size: 0.75rem; text-decoration: none;">
+								+ Add Variant
+							</a>
 						</div>
-						{renderedVariants.map((variant, i) => {
-							const { VariantContent } = variant;
-							return (
-								<div class={`tab-panel ${i === 0 ? 'tab-panel--active' : ''}`} id={`variant-${i}`}>
-									<div class="prose">
-										<VariantContent />
+
+						{renderedVariants.length > 1 ? (
+							<>
+								<div class="tabs" id="variant-tabs">
+									{renderedVariants.map((variant, i) => (
+										<button
+											class={`tab ${i === 0 ? 'tab--active' : ''}`}
+											data-tab={`variant-${i}`}
+											type="button"
+										>
+											{variant.tech?.name || 'General'}
+											{variant.data.difficulty_override && (
+												<span style="margin-left: 0.375rem; font-size: 0.6875rem; opacity: 0.6;">({variant.data.difficulty_override})</span>
+											)}
+										</button>
+									))}
+								</div>
+								{renderedVariants.map((variant, i) => {
+									const { VariantContent } = variant;
+									return (
+										<div class={`tab-panel ${i === 0 ? 'tab-panel--active' : ''}`} id={`variant-${i}`}>
+											<div class="prose">
+												<VariantContent />
+											</div>
+										</div>
+									);
+								})}
+							</>
+						) : (
+							(() => {
+								const SingleVariantContent = renderedVariants[0].VariantContent;
+								return (
+									<div style="border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); overflow: hidden;">
+										<div style="padding: 0.75rem 1rem; background: var(--color-surface-raised); border-bottom: 1px solid var(--color-border-default); font-family: var(--font-mono); font-size: 0.875rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+											<span>{renderedVariants[0].tech?.name || 'General'}</span>
+											<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/variants/${question.id.replace('question.', '')}/${renderedVariants[0].data.technology.replace('tech.', '')}.md`}
+											   target="_blank" rel="noopener" style="font-size: 0.75rem; color: var(--color-text-secondary); text-decoration: none;">
+												Improve this answer ✏️
+											</a>
+										</div>
+										<div class="prose" style="padding: 1.25rem;">
+											<SingleVariantContent />
+										</div>
 									</div>
-								</div>
-							);
-						})}
-					</>
-				) : (
-					(() => {
-						const SingleVariantContent = renderedVariants[0].VariantContent;
-						return (
-							<div style="border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); overflow: hidden;">
-								<div style="padding: 0.75rem 1rem; background: var(--color-surface-raised); border-bottom: 1px solid var(--color-border-default); font-family: var(--font-mono); font-size: 0.875rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
-									<span>{renderedVariants[0].tech?.name || 'General'}</span>
-									<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/variants/${question.id.replace('question.', '')}/${renderedVariants[0].data.technology.replace('tech.', '')}.md`}
-									   target="_blank" rel="noopener" style="font-size: 0.75rem; color: var(--color-text-secondary); text-decoration: none;">
-										Improve this answer ✏️
-									</a>
-								</div>
-								<div class="prose" style="padding: 1.25rem;">
-									<SingleVariantContent />
-								</div>
-							</div>
-						);
-					})()
+								);
+							})()
+						)}
+					</section>
 				)}
-			</section>
-		)}
+			</div>
+
+			<aside class="question-sidebar">
+				{variations.length > 0 && (
+					<div class="sidebar-card">
+						<h3 class="sidebar-card__title">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+							Question Variations
+						</h3>
+						<p class="sidebar-card__desc">Real-world ways this might be asked during an interview:</p>
+						<ul class="sidebar-variations">
+							{variations.map((v) => (
+								<li>{v}</li>
+							))}
+						</ul>
+					</div>
+				)}
+
+				<div class="sidebar-card" style="margin-top: 1.5rem; background: var(--color-accent-subtle); border-color: var(--color-accent-muted);">
+					<h3 class="sidebar-card__title" style="color: var(--color-accent);">Pro Tip</h3>
+					<p style="font-size: 0.8125rem; color: var(--color-text-secondary); margin: 0;">
+						Interviewers rarely ask the exact question listed. Focus on understanding the core concepts and practice explaining these variations aloud.
+					</p>
+				</div>
+			</aside>
+		</div>
 	</article>
+
+	<style>
+		.question-layout {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 3rem;
+		}
+
+		@media (min-width: 1024px) {
+			.question-layout {
+				grid-template-columns: 1fr 320px;
+			}
+		}
+
+		.question-main {
+			min-width: 0;
+		}
+
+		.question-sidebar {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.sidebar-card {
+			background: var(--color-surface-raised);
+			border: 1px solid var(--color-border-default);
+			border-radius: var(--radius-lg);
+			padding: 1.25rem;
+		}
+
+		.sidebar-card__title {
+			display: flex;
+			align-items: center;
+			font-size: 0.875rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			margin: 0 0 0.75rem;
+			color: var(--color-text-primary);
+		}
+
+		.sidebar-card__desc {
+			font-size: 0.8125rem;
+			color: var(--color-text-tertiary);
+			margin: 0 0 1rem;
+		}
+
+		.sidebar-variations {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.sidebar-variations li {
+			font-size: 0.875rem;
+			line-height: 1.5;
+			padding-left: 1.25rem;
+			position: relative;
+			color: var(--color-text-secondary);
+		}
+
+		.sidebar-variations li::before {
+			content: "→";
+			position: absolute;
+			left: 0;
+			color: var(--color-accent);
+			font-weight: bold;
+		}
+
+		/* Hide the variations section in the main prose content */
+		.question-content :global(h2:last-of-type),
+		.question-content :global(h2:last-of-type ~ *) {
+			display: none;
+		}
+	</style>
 
 	<script>
 		const tabsContainer = document.getElementById('variant-tabs');

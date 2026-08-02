@@ -19,3 +19,10 @@ This question tests depth of knowledge in SQL Server session management and temp
 - **Scope**: Who can see the table?
 - **Lifetime**: When is the table dropped?
 - **Syntax**: Prefix differences (`#` vs `##`).
+
+## Question Variations
+
+- "What is the difference between a local temporary table (`#`) and a global temporary table (`##`)?"
+- "When is a local temporary table automatically dropped by the database engine?"
+- "Who can see and access a global temporary table once it has been created?"
+- "Compare the use of temporary tables versus table variables (`@table`)."

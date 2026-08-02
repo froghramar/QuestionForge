@@ -20,3 +20,10 @@ This is the most basic Kubernetes question. It tests whether a candidate underst
 - **Shared Resources:** Containers in a Pod share the same Network IP, Port space, and Storage.
 - **Sidecar Pattern:** Using multiple containers in a single Pod to perform helper tasks.
 - **Lifecycle:** The Pod is the unit of scheduling, not the container.
+
+## Question Variations
+
+- "What is a Pod in Kubernetes, and why do we need it instead of just running containers?"
+- "Can multiple containers in the same Pod communicate over `localhost`? Why?"
+- "Give an example of a 'sidecar' container pattern and why it's used."
+- "What happens to the containers in a Pod if the Pod is rescheduled to a different node?"

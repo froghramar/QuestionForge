@@ -18,3 +18,10 @@ updated: 2026-08-02
 - It is higher-level than a **Thread** and is managed by the Task Scheduler (using the Thread Pool).
 - Tasks support continuation (`ContinueWith`), cancellation (`CancellationToken`), and awaiting.
 - Return types: `Task` (void), `Task<T>` (returns value), `ValueTask` (performance optimization).
+
+## Question Variations
+
+- "What is the difference between a `Task` and a `Thread` in .NET?"
+- "What is a `ValueTask`, and when should you use it instead of a standard `Task`?"
+- "How do you handle cancellations in a Task-based asynchronous operation?"
+- "What happens if an exception is thrown inside a Task that is not awaited?"

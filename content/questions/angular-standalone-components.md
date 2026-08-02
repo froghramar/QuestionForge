@@ -20,3 +20,10 @@ Standalone components represent the most significant shift in Angular's architec
 - **`standalone: true`:** The flag that marks a component, directive, or pipe as standalone.
 - **Explicit Imports:** Standalone components must explicitly import their own dependencies (other components, directives, or modules).
 - **Bootstrap Simplification:** How `bootstrapApplication` replaces `platformBrowserDynamic().bootstrapModule()`.
+
+## Question Variations
+
+- "What are the primary benefits of using Standalone Components over NgModules?"
+- "How do you migrate an existing NgModule-based application to Standalone Components?"
+- "Can you use a Standalone Component inside an NgModule, or vice versa? How?"
+- "How does tree-shaking improve with Standalone Components?"

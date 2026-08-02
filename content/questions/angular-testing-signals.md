@@ -22,3 +22,10 @@ Testing is a cornerstone of professional software development. With the shift to
 - **Testing Computed Signals:** Ensuring derived state updates correctly.
 - **Zoneless Testing:** How testing changes when `Zone.js` is removed.
 
+## Question Variations
+
+- "How do you test a component that uses signal-based inputs (`input()`)?"
+- "What is the purpose of `TestBed.flushEffects()`, and when is it needed in a test?"
+- "How does testing a signal-based component differ from testing a traditional `@Input()`-based one?"
+- "Can you test a signal-based component without using `fixture.detectChanges()`? If so, how?"
+

@@ -20,4 +20,11 @@ This is a critical operational question. Poorly defined resources lead to either
 - **Throttling vs. Eviction:** What happens when limits are hit.
 - **OOM Kill:** The behavior of the Linux OOM Killer in a containerized environment.
 - **Units:** Understanding `m` (millicores) and `Mi/Gi` (mebibytes/gibibytes).
+
+## Question Variations
+
+- "What is the difference between resource 'requests' and 'limits' in Kubernetes?"
+- "What happens to a container that exceeds its CPU limit? What about its Memory limit?"
+- "How does the Kubernetes scheduler use resource requests when placing Pods on nodes?"
+- "What is an 'OOMKill,' and what causes it in a Kubernetes environment?"
 ---

@@ -20,3 +20,10 @@ With the introduction of Signals in Angular 16+, understanding when to use Signa
 - **Fine-grained Reactivity:** Signals allow Angular to track exactly which parts of the UI need updating.
 - **Stream Processing:** RxJS excels at complex asynchronous operations like debouncing, switching, and merging.
 - **Pull vs. Push:** Signals are "producer-push, consumer-pull" (lazy evaluation), while Observables are "push".
+
+## Question Variations
+
+- "When should you prefer Signals over RxJS in a modern Angular application?"
+- "Can Signals replace RxJS entirely? Why or why not?"
+- "How does Angular's change detection change when using Signals vs. traditional Zone.js?"
+- "How do you handle asynchronous data fetching using the new Signal-based APIs?"

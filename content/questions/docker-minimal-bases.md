@@ -21,3 +21,10 @@ This is a deep-dive question into container security and optimization. It tests 
 - **Static vs. Dynamic Linking:** Why `scratch` only works for some languages.
 - **Debugging:** The trade-off between security and ease of troubleshooting.
 - **CA Certificates:** A common pitfall when using ultra-minimal images.
+
+## Question Variations
+
+- "What is a 'distroless' image, and why would you use one?"
+- "What is the `scratch` base image, and what kind of applications can use it?"
+- "How do minimal base images improve the security posture of a container?"
+- "What are the challenges of debugging an application running in a distroless container?"

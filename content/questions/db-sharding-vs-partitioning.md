@@ -19,3 +19,10 @@ This question reveals whether you can design databases for scale. Interviewers w
 - Sharding enables horizontal scaling beyond a single machine's limits but introduces cross-shard query complexity
 - Cross-shard joins and distributed transactions are expensive and often require denormalization
 - Shard key selection is critical: poor keys create hotspots, good keys distribute load evenly
+
+## Question Variations
+
+- "What is the difference between horizontal partitioning and sharding?"
+- "When would you choose to shard a database instead of just vertically scaling the server?"
+- "What are the common challenges when performing joins across shards?"
+- "How do you handle 'hotspots' in a sharded database architecture?"

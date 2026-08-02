@@ -20,3 +20,10 @@ Performance optimization is a key skill for senior Angular developers. Understan
 - **Immutability:** `OnPush` relies on object reference changes.
 - **`ChangeDetectorRef`:** Manually triggering detection via `markForCheck()` or `detectChanges()`.
 - **Async Pipe:** How it interacts with `OnPush` to automatically trigger updates.
+
+## Question Variations
+
+- "When would you choose `ChangeDetectionStrategy.OnPush` over the default strategy?"
+- "What are the common pitfalls when using `OnPush` change detection?"
+- "Explain the difference between `markForCheck()` and `detectChanges()` in `ChangeDetectorRef`."
+- "How does using immutability in your state management help with Angular's performance?"

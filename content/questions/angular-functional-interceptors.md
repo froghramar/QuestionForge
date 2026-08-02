@@ -22,3 +22,10 @@ Interceptors are a fundamental part of handling cross-cutting concerns like auth
 - **`provideHttpClient(withInterceptors([...]))`:** The modern configuration method.
 - **Injecting services:** Using the `inject()` function inside functional interceptors.
 
+## Question Variations
+
+- "What are the benefits of using functional interceptors over traditional class-based interceptors?"
+- "How do you configure functional interceptors when bootstrapping an Angular application?"
+- "How do you access dependency injection services within a functional interceptor?"
+- "Explain how the `next()` function works in a functional interceptor chain."
+

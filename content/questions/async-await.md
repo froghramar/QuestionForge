@@ -21,3 +21,10 @@ Interviewers use this to gauge whether you understand asynchronous programming b
 - Does not create new threads — it frees the current thread to do other work during I/O
 - Error handling via try/catch wraps rejected promises or faulted tasks
 - Sequential vs concurrent awaiting (`await a; await b` vs `await Promise.all([a, b])`)
+
+## Question Variations
+
+- "What is the difference between `async/await` and raw Promises?"
+- "How does the event loop handle an `await` expression?"
+- "What happens if you don't `await` a Promise in a loop?"
+- "Can you use `await` outside of an `async` function? (Top-level await)"

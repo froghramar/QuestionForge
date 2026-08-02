@@ -20,3 +20,10 @@ Interviewers want to see if you build "self-healing" systems. Knowing how to imp
 - **Exit Codes:** How Docker uses the exit code of the health check command (0 for success, 1 for failure).
 - **Orchestration Integration:** How health status affects container lifecycle in Compose or Swarm.
 - **Overhead:** Ensuring the health check command doesn't consume too many resources.
+
+## Question Variations
+
+- "How do you implement a health check in a Dockerfile?"
+- "What is the difference between an application being 'alive' and being 'ready'?"
+- "How does Docker Compose react when a container's health check fails?"
+- "What are the performance considerations when choosing a health check command (e.g., `curl` vs. a custom script)?"

@@ -18,3 +18,10 @@ This tests understanding of static vs dynamic typing within a statically-typed l
 - `dynamic` is dynamically typed; the type is resolved at runtime.
 - `var` has full IntelliSense support; `dynamic` does not.
 - `dynamic` bypasses compile-time type checking, which can lead to runtime exceptions if members don't exist.
+
+## Question Variations
+
+- "What is the difference between `var` and `dynamic` in C#?"
+- "Is `var` dynamic? (Explain compile-time inference vs runtime binding)"
+- "When would you use `dynamic` over `object` or `var`?"
+- "What are the performance implications of using `dynamic`?"

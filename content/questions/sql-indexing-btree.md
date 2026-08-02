@@ -19,3 +19,10 @@ Indexing is the most impactful database optimization skill. Interviewers want to
 - SARGable (Search ARGumentable): a query predicate that can leverage an index seek instead of a scan
 - Functions on columns (`WHERE YEAR(date) = 2024`), leading wildcards (`LIKE '%foo'`), and implicit type conversions break SARGability
 - Composite index key order matters: the "left-prefix rule" means `(A, B, C)` supports queries on `A`, `A,B`, or `A,B,C` — not `B` alone
+
+## Question Variations
+
+- "What is a B-Tree index, and how does it speed up database queries?"
+- "What does 'SARGable' mean, and can you give an example of a non-SARGable query?"
+- "Explain the importance of column order in a composite (multi-column) index."
+- "What is the difference between an 'index seek' and an 'index scan'?"

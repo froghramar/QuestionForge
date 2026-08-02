@@ -21,3 +21,10 @@ Discriminated unions are one of TypeScript's most powerful patterns. Interviewer
 - Exhaustiveness checking via `never`: if a new variant is added, unhandled cases cause a compile error
 - Preferred over enums for modeling state machines (e.g., `{ status: "loading" } | { status: "error", message: string }`)
 - Works with `instanceof` narrowing for class hierarchies, but literal discriminants are more common in TS
+
+## Question Variations
+
+- "What is a 'discriminated union' (or 'tagged union') in TypeScript?"
+- "How do you ensure exhaustive type checking when using a switch statement with a union type?"
+- "Why are discriminated unions often preferred over simple `if/else` checks or Enums for complex state?"
+- "How does TypeScript's type narrowing work when you check a discriminant property?"

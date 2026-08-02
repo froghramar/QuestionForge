@@ -21,4 +21,11 @@ Cost and complexity management are key in Kubernetes. This question tests if a c
 - **Consolidation:** Using one IP for many services.
 - **SSL Termination:** Handling certificates in one place.
 - **Ingress Controllers:** The "engine" that powers the Ingress rules.
+
+## Question Variations
+
+- "When would you use an Ingress resource instead of a Service of type `LoadBalancer`?"
+- "What is an Ingress Controller, and why is it necessary to have one in the cluster?"
+- "How does an Ingress handle SSL/TLS termination?"
+- "Explain the difference between Layer 4 and Layer 7 load balancing in the context of Kubernetes."
 ---

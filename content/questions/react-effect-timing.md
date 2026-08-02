@@ -21,3 +21,10 @@ This tests deep knowledge of React's rendering pipeline and the browser paint cy
 - Use `useLayoutEffect` when you need to measure or mutate the DOM before the user sees it (e.g., tooltips, scroll position, animations)
 - `useLayoutEffect` blocks the paint, so heavy computation in it causes visible jank
 - `useLayoutEffect` doesn't run on the server — using it in SSR components triggers warnings
+
+## Question Variations
+
+- "What is the difference between `useEffect` and `useLayoutEffect`?"
+- "When should you use `useLayoutEffect` instead of `useEffect`?"
+- "Why can `useLayoutEffect` cause performance issues or 'jank' in the UI?"
+- "How do these hooks interact with the browser's paint cycle?"

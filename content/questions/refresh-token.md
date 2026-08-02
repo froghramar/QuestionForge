@@ -18,3 +18,10 @@ JWT-based authentication is standard, but Access Tokens should be short-lived. I
 - **Refresh Token**: Long-lived, used only to obtain a new Access Token.
 - **Security**: Refresh tokens are usually stored in a database and can be revoked.
 - **Rotation**: Issuing a new refresh token every time one is used to mitigate the risk of token theft.
+
+## Question Variations
+
+- "What is a 'refresh token,' and how does it differ from an 'access token'?"
+- "Why should access tokens have a short expiration time while refresh tokens are long-lived?"
+- "How do you handle 'refresh token rotation,' and what security problem does it solve?"
+- "Where is the most secure place to store a refresh token in a web browser?"

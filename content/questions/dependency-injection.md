@@ -21,3 +21,10 @@ DI is a foundational pattern in modern software. Interviewers want to confirm yo
 - Service lifetimes: Transient (new instance per request), Scoped (per scope/HTTP request), Singleton (shared)
 - Enables unit testing by allowing mock/stub substitution
 - The composition root is where the entire object graph is wired up
+
+## Question Variations
+
+- "What is Dependency Injection, and how does it relate to Inversion of Control (IoC)?"
+- "Explain the difference between Transient, Scoped, and Singleton lifetimes in a DI container."
+- "Why is constructor injection generally preferred over property or method injection?"
+- "How does Dependency Injection improve the testability of your code?"

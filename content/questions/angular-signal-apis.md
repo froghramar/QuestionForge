@@ -22,3 +22,10 @@ The shift from `@Input()` and `@Output()` to `input()` and `output()` is a funda
 - **Native Effect Integration:** How inputs as signals work with `effect()`.
 - **Type Inference:** Better TypeScript support compared to decorators.
 
+## Question Variations
+
+- "How do Signal-based inputs (`input()`) differ from traditional `@Input()` decorators?"
+- "What is the `model()` function in Angular, and how does it simplify two-way data binding?"
+- "Why are signal-based inputs read-only, and how do you handle derived state from them?"
+- "Explain the benefits of using `input.required()` over the traditional `@Input({ required: true })`."
+

@@ -20,3 +20,10 @@ Interviewers want to see if you know how to manage more than just a single conta
 - **Service Dependency:** Using `depends_on` to control startup order.
 - **Environment Variables:** Managing configuration across environments.
 - **Networking:** How Compose automatically sets up a bridge network for your services.
+
+## Question Variations
+
+- "What is Docker Compose, and when would you use it instead of just `docker run`?"
+- "How do you handle dependencies between services (e.g., ensuring a DB is ready before the API starts)?"
+- "Can you use Docker Compose for production deployments? What are the trade-offs?"
+- "Explain how networking works between services defined in the same `docker-compose.yml` file."

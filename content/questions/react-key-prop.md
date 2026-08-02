@@ -20,3 +20,10 @@ Understanding the `key` prop is essential for building performant React applicat
 - **Diffing Algorithm:** React compares the new element tree with the previous one.
 - **Identity:** `key` helps React identify which items have changed, are added, or are removed.
 - **Stability:** Stable keys allow React to reuse existing DOM elements and component instances.
+
+## Question Variations
+
+- "Why is the `key` prop required when rendering a list in React?"
+- "What happens if you use the array index as a `key`? When is it acceptable, and when is it dangerous?"
+- "How does the `key` prop help React's reconciliation process?"
+- "Can you trigger a component to re-mount by changing its `key`? Why would you do this?"

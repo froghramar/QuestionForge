@@ -21,3 +21,10 @@ Logic reuse is a classic software engineering challenge. In the past, Angular de
 - **Input/Output Mapping:** Exposing directive properties through the host component.
 - **Shared Logic:** Using directives for common behaviors like `Tooltip`, `Ripple`, or `Validation`.
 
+## Question Variations
+
+- "Why is the Directive Composition API preferred over component inheritance in modern Angular?"
+- "How do you use `hostDirectives` to share functionality between components?"
+- "Can you map inputs and outputs from a host directive to the host component? How?"
+- "What are the limitations of the Directive Composition API compared to traditional inheritance?"
+

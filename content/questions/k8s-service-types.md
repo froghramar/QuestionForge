@@ -20,3 +20,10 @@ Exposing applications is a core task in Kubernetes. This question tests whether 
 - **NodePort:** Exposing a service on a static port on each Node's IP.
 - **LoadBalancer:** Using a cloud provider's external load balancer.
 - **ExternalName:** Mapping a service to a DNS name.
+
+## Question Variations
+
+- "What are the different types of Services in Kubernetes, and when would you use each?"
+- "Explain the difference between `ClusterIP` and `NodePort`."
+- "How does a `LoadBalancer` service type interact with cloud providers (AWS/GCP/Azure)?"
+- "What is an Ingress, and how does it differ from a Service of type `LoadBalancer`?"

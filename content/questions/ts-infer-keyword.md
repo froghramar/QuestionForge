@@ -19,3 +19,10 @@ updated: 2026-08-01
 - Powers built-in utility types: `ReturnType<T>`, `Parameters<T>`, `Awaited<T>`, `InstanceType<T>`
 - Can extract types from any position: function return types, promise inner types, array element types, tuple positions
 - Advanced: multiple `infer` positions, recursive conditional types, template literal type extraction
+
+## Question Variations
+
+- "What does the `infer` keyword do in TypeScript conditional types?"
+- "Can you write a utility type that extracts the return type of a function using `infer`?"
+- "Where is the `infer` keyword allowed to be used in a TypeScript type definition?"
+- "How does `infer` help in creating flexible, generic library APIs?"

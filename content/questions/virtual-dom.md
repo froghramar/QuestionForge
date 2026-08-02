@@ -21,3 +21,10 @@ Understanding the Virtual DOM is essential for reasoning about React performance
 - The diffing algorithm is O(n) thanks to two heuristics: elements of different types produce different trees, and keys identify stable children in lists
 - Batching: multiple state updates in the same event handler are batched into a single re-render
 - React Fiber (React 16+) enables interruptible rendering, prioritizing urgent updates over background work
+
+## Question Variations
+
+- "What is the Virtual DOM, and why does React use it?"
+- "Explain the 'reconciliation' process in React."
+- "Why is it important to use a unique `key` prop when rendering a list of elements?"
+- "How does React's diffing algorithm work, and what are its time complexity heuristics?"

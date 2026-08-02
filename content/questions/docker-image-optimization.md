@@ -21,3 +21,10 @@ This question separates beginners from experienced engineers. Anyone can write a
 - **Layer Order:** Why `COPY package.json` should come before `COPY .`.
 - **.dockerignore:** Its role in security and performance.
 - **Combining RUN commands:** Reducing the number of layers.
+
+## Question Variations
+
+- "What are some strategies for reducing the size of a Docker image?"
+- "Explain the importance of 'layer caching' and how to structure a Dockerfile to maximize it."
+- "What is the purpose of a `.dockerignore` file, and how does it affect build performance?"
+- "Why should you combine multiple `RUN` commands into a single instruction?"

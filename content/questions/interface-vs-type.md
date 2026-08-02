@@ -21,3 +21,10 @@ This is a quick litmus test for TypeScript experience. Interviewers want to see 
 - Both can describe object shapes and be extended (interface via `extends`, type via `&`)
 - `interface` is generally preferred for public API contracts and library definitions (mergeability)
 - `type` is preferred for complex type operations, utility types, and union/intersection patterns
+
+## Question Variations
+
+- "What is the difference between `interface` and `type` in TypeScript?"
+- "When would you prefer using a `type` over an `interface`?"
+- "Explain the concept of 'declaration merging' and which keyword supports it."
+- "How do you extend an `interface` compared to extending a `type` alias?"

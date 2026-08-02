@@ -22,3 +22,10 @@ State management is a core architectural concern. With the shift to Signals, und
 - **Architecture:** Local (Component) vs. Global (Root) usage of SignalStore.
 - **Lifecycle:** Using `withHooks` for initialization and cleanup.
 
+## Question Variations
+
+- "What are the advantages of NgRx SignalStore over traditional Redux-based state management in Angular?"
+- "How does functional composition work in SignalStore, and why is it beneficial?"
+- "Explain the difference between `withState`, `withComputed`, and `withMethods`."
+- "When would you use a local SignalStore versus a global one?"
+

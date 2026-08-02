@@ -19,3 +19,10 @@ This distinguishes developers who understand the difference between I/O concurre
 - `Parallel.ForEachAsync` (.NET 6+): hybrid — async I/O with controlled concurrency via `MaxDegreeOfParallelism`
 - Using `Parallel.ForEach` for I/O-bound work blocks threads and leads to thread pool starvation
 - Shared state in parallel operations requires thread-safe collections or explicit locking
+
+## Question Variations
+
+- "When would you use `Task.WhenAll` versus `Parallel.ForEach`?"
+- "Explain the difference between I/O-bound and CPU-bound operations in the context of .NET."
+- "What is 'thread pool starvation,' and how can using `Parallel.ForEach` for I/O-bound work cause it?"
+- "What is `Parallel.ForEachAsync`, and when was it introduced in the .NET ecosystem?"

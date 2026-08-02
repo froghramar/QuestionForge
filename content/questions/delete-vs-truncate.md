@@ -21,3 +21,10 @@ This question tests the candidate's understanding of DML (Data Manipulation Lang
 - **Filters**: DELETE supports a `WHERE` clause; TRUNCATE does not.
 - **Identity**: TRUNCATE resets the `IDENTITY` seed; DELETE does not.
 - **Triggers**: DELETE fires `AFTER DELETE` triggers; TRUNCATE does not.
+
+## Question Variations
+
+- "What are the main differences between `DELETE` and `TRUNCATE` in SQL?"
+- "Why is `TRUNCATE` generally faster than `DELETE` for large tables?"
+- "Can you roll back a `TRUNCATE` operation? Does it depend on the database engine?"
+- "How does `TRUNCATE` handle identity columns differently than `DELETE`?"

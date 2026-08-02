@@ -20,3 +20,10 @@ Caching is one of the most effective ways to improve system performance. Intervi
 - **Invalidation:** How to handle data updates.
 - **TTL (Time To Live):** Using expiration to manage staleness.
 - **Thundering Herd Problem:** What happens when a popular cache key expires simultaneously for many users.
+
+## Question Variations
+
+- "Explain the difference between a 'Cache-Aside' strategy and a 'Write-Through' strategy."
+- "What is the 'Thundering Herd' problem in caching, and how can you mitigate it?"
+- "How do you decide on the appropriate TTL (Time To Live) for a cached resource?"
+- "What are the common strategies for cache invalidation?"

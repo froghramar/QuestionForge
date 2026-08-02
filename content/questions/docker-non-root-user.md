@@ -20,3 +20,10 @@ Running as root is one of the most common and dangerous Docker misconfigurations
 - **The `USER` Instruction:** How to switch users in a Dockerfile.
 - **Permission Management:** How to ensure the non-root user can still access necessary files.
 - **Privileged Containers:** Why they should be avoided.
+
+## Question Variations
+
+- "Why is it considered a security best practice to run Docker containers as a non-root user?"
+- "How do you create a non-root user and switch to it in a Dockerfile?"
+- "What are the common issues you might face when switching from root to a non-root user (e.g., file permissions)?"
+- "What is a 'privileged' container, and why is it dangerous?"

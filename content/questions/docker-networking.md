@@ -20,3 +20,10 @@ This is a more advanced question that tests a candidate's understanding of how D
 - **Performance:** The overhead of the bridge network vs. the native performance of host networking.
 - **Port Conflicts:** How `host` networking avoids NAT but introduces the risk of port collisions on the host.
 - **User-defined Bridge Networks:** Why they are better than the default bridge.
+
+## Question Variations
+
+- "Explain the difference between `bridge` and `host` networking in Docker."
+- "When would you choose to use `host` networking over the default `bridge`?"
+- "What are the security implications of using `host` networking?"
+- "How does Docker handle port mapping between the host and the container in bridge mode?"

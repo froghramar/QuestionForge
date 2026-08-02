@@ -21,3 +21,10 @@ This tests your understanding of data consistency in concurrent systems. Intervi
 - Pessimistic: high correctness guarantees, lower throughput, risk of deadlocks
 - Optimistic: high throughput under low contention, but requires conflict resolution logic
 - Real-world implementations: `SELECT FOR UPDATE` (pessimistic), row version / `If-Match` headers (optimistic)
+
+## Question Variations
+
+- "Explain the difference between optimistic and pessimistic locking."
+- "When would you prefer optimistic locking over pessimistic locking in a web application?"
+- "How do you implement optimistic concurrency control in a database?"
+- "What are the risks of using pessimistic locking in a high-traffic environment?"

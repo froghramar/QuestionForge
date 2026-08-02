@@ -22,3 +22,10 @@ With the stabilization of SSR and Hydration in Angular 17+, traditional lifecycl
 - **Zoneless Context:** How these hooks work in applications without `Zone.js`.
 - **Phase Control:** Understanding the `early`, `mixed`, and `layout` phases of the hooks.
 
+## Question Variations
+
+- "What is the difference between `afterRender` and `ngAfterViewInit`?"
+- "Why should you avoid using `ngAfterViewInit` for DOM measurements in a Server-Side Rendered (SSR) application?"
+- "When would you choose `afterNextRender` instead of `afterRender`?"
+- "How do the new render hooks help in improving the performance of third-party library initializations?"
+

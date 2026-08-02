@@ -21,3 +21,10 @@ Resource management separates senior .NET developers from juniors. Interviewers 
 - The full pattern involves a `Dispose(bool disposing)` method, a `_disposed` flag, and optional finalizer
 - `GC.SuppressFinalize(this)` prevents double-cleanup and avoids promoting the object to a higher GC generation
 - `using` statements/declarations guarantee `Dispose()` is called even if an exception is thrown
+
+## Question Variations
+
+- "What is the `IDisposable` interface, and why do we need it in a garbage-collected environment like .NET?"
+- "Explain the difference between managed and unmanaged resources."
+- "What is the purpose of `GC.SuppressFinalize(this)` in the Dispose pattern?"
+- "What is the difference between a `using` statement and a `using` declaration in C# 8.0+?"

@@ -19,3 +19,10 @@ State management choices have a direct impact on application performance and mai
 - State libraries (Zustand, Redux): use subscription models with selectors to prevent unnecessary re-renders
 - Zustand/Jotai are minimal-boilerplate alternatives to Redux for most use cases
 - The decision depends on update frequency, state complexity, and whether you need middleware/devtools
+
+## Question Variations
+
+- "When should you use React Context instead of a dedicated state management library like Redux or Zustand?"
+- "What are the performance implications of using React Context for frequently updated state?"
+- "How does Zustand solve the 'prop drilling' problem differently than Redux?"
+- "What is the difference between 'local state' and 'global state,' and how do you decide where a piece of state belongs?"

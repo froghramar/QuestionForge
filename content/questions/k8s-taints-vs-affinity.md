@@ -20,4 +20,11 @@ This is an advanced scheduling question. It tests if the candidate knows the dif
 - **Hard vs. Soft constraints.**
 - **The "Exclusive Node" use case.**
 - **Effects:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`.
+
+## Question Variations
+
+- "What is the difference between 'Node Affinity' and 'Taints and Tolerations'?"
+- "When would you use a Taint to 'repel' Pods from a specific node?"
+- "Explain the difference between `requiredDuringSchedulingIgnoredDuringExecution` and `preferredDuringSchedulingIgnoredDuringExecution` in Node Affinity."
+- "How do you ensure that only specific Pods (e.g., monitoring agents) can run on a tainted node?"
 ---

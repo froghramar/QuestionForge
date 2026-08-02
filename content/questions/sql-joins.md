@@ -21,3 +21,10 @@ Understanding joins is fundamental to working with relational databases. Intervi
 - **FULL JOIN**: Union of sets.
 - **CROSS JOIN**: Cartesian product.
 - **SELF JOIN**: Hierarchy or comparative queries.
+
+## Question Variations
+
+- "What is the difference between an `INNER JOIN` and a `LEFT JOIN`?"
+- "When would you use a `CROSS JOIN` in a real-world scenario?"
+- "What is a `SELF JOIN`, and can you give an example of when it's useful (e.g., an employee/manager table)?"
+- "How does a `FULL OUTER JOIN` differ from a `UNION` of a `LEFT JOIN` and a `RIGHT JOIN`?"

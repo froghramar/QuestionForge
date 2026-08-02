@@ -20,3 +20,10 @@ Understanding persistence is critical for running databases, stateful applicatio
 - **Volumes:** Docker-managed, high performance, preferred for production.
 - **Bind Mounts:** Host-path dependent, great for live-reloading code during development.
 - **Data Sharing:** How multiple containers can share the same volume.
+
+## Question Variations
+
+- "What is the difference between a Docker Volume and a Bind Mount?"
+- "When would you prefer a Bind Mount over a Volume during development?"
+- "How do you ensure that data persists even after a container is removed?"
+- "Explain how data is shared between two different containers using a shared volume."

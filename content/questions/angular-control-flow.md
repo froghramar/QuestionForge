@@ -22,3 +22,10 @@ The new control flow syntax is one of the most visible changes in modern Angular
 - **Component Boilerplate:** Reduced need for `CommonModule`.
 - **`@empty` block:** Handling empty collections natively.
 
+## Question Variations
+
+- "What are the main advantages of using the new `@if` and `@for` syntax over `*ngIf` and `*ngFor`?"
+- "Why is the `track` property now required in `@for` loops, and what happens if you don't provide a stable identity?"
+- "How does the new control flow syntax improve the performance of Angular's change detection?"
+- "How do you handle the transition from `CommonModule` to the new control flow in an existing application?"
+

@@ -20,3 +20,10 @@ This is a fundamental question to check if a developer understands the differenc
 - It does **not** mutate the original array.
 - The new array has the same length as the original array.
 - If the elements are objects, the new array will contain references to the same objects (shallow copy) unless you explicitly clone them in the callback.
+
+## Question Variations
+
+- "Does `Array.map()` modify the original array? Why is this important?"
+- "What is the difference between `Array.map()` and `Array.forEach()`?"
+- "If you have an array of objects and use `.map()` to change a property on an object, does the original array change? (Shallow vs Deep copy)"
+- "How do you filter and transform an array at the same time using `.map()` and other methods?"

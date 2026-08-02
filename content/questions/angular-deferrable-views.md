@@ -22,3 +22,10 @@ updated: 2026-08-02
 - **SSR Behavior:** How deferred blocks are rendered on the server.
 - **Hydration:** Interaction between deferred content and non-destructive hydration.
 
+## Question Variations
+
+- "How does `@defer` work, and what problem does it solve in Angular applications?"
+- "Explain the difference between `on viewport` and `on idle` triggers in `@defer`."
+- "What is the purpose of the `prefetch` keyword, and when should you use it?"
+- "How do you handle error or loading states when using deferrable views?"
+

@@ -21,4 +21,11 @@ Managing updates is a daily task for DevOps engineers. This question tests wheth
 - **Version Skew:** The challenge of running two versions of an app at once.
 - **MaxSurge vs. MaxUnavailable:** Fine-tuning the update speed and availability.
 - **Rollbacks:** How Kubernetes handles a failed update.
+
+## Question Variations
+
+- "Explain the difference between the `RollingUpdate` and `Recreate` deployment strategies in Kubernetes."
+- "What do `maxSurge` and `maxUnavailable` control in a `RollingUpdate`?"
+- "Why might you choose a `Recreate` strategy even though it causes downtime?"
+- "How do you ensure zero-downtime deployments when updating an application that has long-running connections?"
 ---

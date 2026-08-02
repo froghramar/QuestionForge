@@ -20,3 +20,10 @@ Dependency Injection is a pillar of Angular's architecture. Interviewers ask abo
 - **Hierarchical Injectors:** The relationship between the Environment Injector and the Element Injector.
 - **`providedIn: 'root'` vs. Module Providers:** Differences in singleton behavior and bundle size.
 - **Resolution Modifiers:** `@Optional()`, `@SkipSelf()`, `@Self()`, and `@Host()`.
+
+## Question Variations
+
+- "What is the difference between providing a service in `root` versus providing it in a specific component?"
+- "Explain the hierarchical nature of Angular's Injector system."
+- "What do the `@SkipSelf()` and `@Host()` decorators do, and when would you use them?"
+- "How can you create a service that is a singleton per lazy-loaded module but not for the whole app?"

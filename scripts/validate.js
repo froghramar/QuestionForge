@@ -85,6 +85,16 @@ function validate() {
                     }
                 });
             }
+
+            // Enforcement of sections for questions
+            if (key === 'questions') {
+                const requiredSections = ['## Question Variations'];
+                requiredSections.forEach(section => {
+                    if (!content.includes(section)) {
+                        errors.push(`${relativePath}: Missing required section: ${section}`);
+                    }
+                });
+            }
         });
     }
 

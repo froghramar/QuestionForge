@@ -20,4 +20,11 @@ This question verifies that a candidate knows how to handle application configur
 - **Environment Agnosticism:** Keeping one image for Dev, Staging, and Prod.
 - **Mounting Mechanisms:** Files vs. Environment variables.
 - **Hot-reloading:** What happens when you update a ConfigMap while the app is running.
+
+## Question Variations
+
+- "What is the difference between a ConfigMap and a Secret in Kubernetes?"
+- "Is a Kubernetes Secret actually secure by default? Why or why not?"
+- "How do you mount a ConfigMap into a Pod as a file versus an environment variable?"
+- "Explain what happens to an application when a ConfigMap it depends on is updated."
 ---

@@ -20,3 +20,10 @@ BuildKit is the modern standard for Docker builds. This question tests if a cand
 - **Build Secrets:** The secure way to handle credentials during a build.
 - **Cache Mounts:** Speeding up `npm install` or `pip install` by persisting the cache directory between builds.
 - **SSH Forwarding:** Accessing private Git repos during build.
+
+## Question Variations
+
+- "What is Docker BuildKit, and how does it improve the build process?"
+- "How do you securely handle secrets (like API keys) during a Docker build?"
+- "What are 'cache mounts' in BuildKit, and how do they speed up builds for language package managers?"
+- "Explain how BuildKit handles build stages in parallel compared to the legacy builder."

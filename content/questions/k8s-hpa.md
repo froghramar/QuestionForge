@@ -21,4 +21,11 @@ Dynamic scaling is one of the primary reasons companies move to Kubernetes. This
 - **Resource Requests:** Why they are mandatory for HPA.
 - **Metrics Server:** The source of truth for resource usage.
 - **Flapping:** What it is and how to prevent it.
+
+## Question Variations
+
+- "What is the Horizontal Pod Autoscaler (HPA), and how does it determine when to scale?"
+- "Why are resource 'requests' mandatory for the HPA to work correctly?"
+- "What is 'flapping' in the context of autoscaling, and how can you configure the HPA to avoid it?"
+- "Can the HPA scale based on custom metrics (like request count) instead of just CPU or Memory?"
 ---

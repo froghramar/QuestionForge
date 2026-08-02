@@ -20,4 +20,11 @@ Security is a top priority in Kubernetes. This question tests whether a candidat
 - **Aggregation:** How ClusterRoles can be used to grant permissions across all namespaces.
 - **ServiceAccounts:** The primary way applications authenticate with the API.
 - **Binding:** The link between the permission (Role) and the identity (Subject).
+
+## Question Variations
+
+- "What is the difference between a `Role` and a `ClusterRole` in Kubernetes RBAC?"
+- "When would you use a `ClusterRoleBinding` instead of a `RoleBinding`?"
+- "Can you use a `RoleBinding` to grant permissions defined in a `ClusterRole`? Why would you do this?"
+- "Explain the purpose of a `ServiceAccount` and how it interacts with RBAC."
 ---

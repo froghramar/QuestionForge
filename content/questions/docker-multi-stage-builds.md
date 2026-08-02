@@ -21,3 +21,10 @@ This question tests whether a candidate knows how to build production-ready Dock
 - **`FROM ... AS ...` syntax:** Naming stages.
 - **`COPY --from=...` syntax:** Moving artifacts between stages.
 - **Image Bloat:** Understanding how large images slow down deployments and increase costs.
+
+## Question Variations
+
+- "What are multi-stage builds in Docker, and what problem do they solve?"
+- "How do multi-stage builds help in keeping production images secure?"
+- "Can you copy files from one build stage to another? How?"
+- "How would you use multi-stage builds to run tests during the image creation process?"

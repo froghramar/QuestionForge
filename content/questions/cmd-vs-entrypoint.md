@@ -20,3 +20,10 @@ This is a classic Docker question that tests whether a candidate understands how
 - **Combining them:** How `CMD` provides default arguments to `ENTRYPOINT`.
 - **Exec Form vs. Shell Form:** Why `["executable"]` is better for signal handling.
 - **Use Cases:** When to use one over the other.
+
+## Question Variations
+
+- "What is the difference between `CMD` and `ENTRYPOINT` in a Dockerfile?"
+- "What happens if you provide arguments to `docker run` when the image has both `ENTRYPOINT` and `CMD`?"
+- "Why is the 'exec form' (JSON array) preferred over the 'shell form' for these instructions?"
+- "How do you make a Docker image that behaves like an executable using `ENTRYPOINT`?"

@@ -19,3 +19,10 @@ This is a classic "gotcha" question. Choosing the wrong function can lead to bug
 - **Scope**: Current block of execution.
 - **Session**: Current connection.
 - **Table Specificity**: Targeting a specific entity.
+
+## Question Variations
+
+- "What is the difference between `@@IDENTITY` and `SCOPE_IDENTITY()` in SQL Server?"
+- "Why is `SCOPE_IDENTITY()` generally preferred over `@@IDENTITY`?"
+- "When would you use `IDENT_CURRENT()` instead of the other two identity functions?"
+- "Explain a scenario where `@@IDENTITY` would return an unexpected value (e.g., due to triggers)."

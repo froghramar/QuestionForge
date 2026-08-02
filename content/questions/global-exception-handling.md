@@ -18,3 +18,10 @@ Production-grade applications must handle errors gracefully without leaking sens
 - **User Experience**: Returning a consistent error response format to the client.
 - **Security**: Preventing raw stack traces from reaching the end-user.
 - **Implementation**: Usually done via Middleware (ASP.NET Core), Exception Filters, or ControllerAdvice (Spring).
+
+## Question Variations
+
+- "Why is it important to have a global exception handling strategy instead of individual try-catch blocks?"
+- "How do you prevent sensitive system information from being leaked in error messages?"
+- "Explain how you would implement a global exception handler in your preferred web framework."
+- "What should be included in a standard error response returned by an API?"
