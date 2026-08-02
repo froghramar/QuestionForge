@@ -9,10 +9,11 @@ In the Java ecosystem, Dependency Injection is primarily associated with **Sprin
 
 1.  **Spring Context**: The IoC container manages beans and their dependencies.
 2.  **Annotation-Driven**: Uses `@Autowired` (Spring) or `@Inject` (Jakarta EE) to resolve dependencies.
-3.  **Scopes**:
-    *   `Singleton`: One instance per IoC container (default).
-    *   `Prototype`: New instance every time it's requested.
-    *   `Request/Session`: Web-specific scopes for Jakarta/Spring Web.
+3.  **Service Lifetimes (Scopes)**:
+    *   **Singleton**: One instance per Spring container. The same instance is injected into all dependent beans. (Default).
+    *   **Prototype**: A new instance is created every time the bean is requested from the container.
+    *   **Request**: A new instance is created for each HTTP request (only valid in web-aware Spring contexts). Similar to .NET's "Scoped".
+    *   **Session**: A new instance is created for each HTTP session.
 
 # Why It Matters
 

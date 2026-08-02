@@ -10,7 +10,10 @@ In modern PHP, Dependency Injection is handled by a **Service Container** (IoC c
 1.  **Constructor Injection**: The preferred method. The container uses reflection to automatically instantiate and inject dependencies.
 2.  **Laravel Service Container**: Allows binding interfaces to concrete implementations via Service Providers.
 3.  **Symfony DependencyInjection Component**: Uses YAML, XML, or PHP configuration to define how services are instantiated.
-4.  **Autowiring**: Both Laravel and Symfony support autowiring, which resolves dependencies based on type-hints.
+4.  **Service Lifetimes**:
+    *   **Singleton**: The container resolves the dependency once and returns the same instance for the rest of the request cycle.
+    *   **Transient (Binding)**: A new instance is created every time it is resolved.
+    *   **Scoped**: In PHP (Shared Nothing), most services are effectively scoped to the single HTTP request by default.
 
 # Why It Matters
 
