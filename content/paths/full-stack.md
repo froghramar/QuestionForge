@@ -11,5 +11,6 @@ topics:
   - topic.async-programming
   - topic.database-fundamentals
   - topic.distributed-systems
+  - topic.containerization
 order: 3
 ---
