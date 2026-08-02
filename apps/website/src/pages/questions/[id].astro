@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { BookmarkButton } from '../../components/BookmarkButton';
 
 export async function getStaticPaths() {
 	const questions = await getCollection('questions');
@@ -139,7 +140,8 @@ function getDifficultyClass(diff: string): string {
 		)}
 
 		<footer style="padding-top: 1.5rem; border-top: 1px solid var(--color-border-default);">
-			<div style="display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 1rem;">
+			<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+				<BookmarkButton client:load questionId={question.id} />
 				<div style="display: flex; align-items: center; gap: 1rem;">
 					<span style="font-size: 0.75rem; color: var(--color-text-tertiary);">
 						Updated {new Date(question.data.updated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}

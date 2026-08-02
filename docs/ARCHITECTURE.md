@@ -36,6 +36,10 @@ While the content catalog is static, QuestionForge uses **Supabase** to provide 
 
 The dynamic layer is implemented entirely on the client side to maintain the benefits of a static site (fast initial load, SEO) while providing personalized features.
 
+#### Database Schema
+
+The database schema, including tables and Row-Level Security (RLS) policies, is managed via **Supabase Migrations**. The source of truth resides in the `/supabase/migrations` directory at the project root.
+
 ### Why Question Variants?
 
 Traditional interview sites duplicate questions for every language (e.g., "Async in C#" and "Async in JS" as separate entities). 

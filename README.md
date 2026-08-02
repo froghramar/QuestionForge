@@ -35,6 +35,28 @@ QuestionForge is the Wikipedia of technical interview knowledge. It is a communi
 
 ---
 
+# Database Migrations
+
+Dynamic features use Supabase. To sync the database schema:
+
+1. **Install Supabase CLI:**
+   ```bash
+   # Using Homebrew (macOS/Linux)
+   brew install supabase/tap/supabase
+   ```
+
+2. **Link your project:**
+   ```bash
+   supabase link --project-ref your-project-ref
+   ```
+
+3. **Push migrations:**
+   ```bash
+   npm run db:push
+   ```
+
+---
+
 # Content Hierarchy
 
 ```text

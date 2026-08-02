@@ -20,6 +20,7 @@ When adding content:
 ## Architecture & Validation
 * **Astro:** Use `content.config.ts` for schema enforcement.
 * **Supabase:** Used for Client-side Auth (GitHub/Google) and dynamic user data (Bookmarks). Configuration in `apps/website/src/lib/supabase.ts`.
+* **Migrations:** Managed via Supabase CLI in `/supabase/migrations`. Use `npm run db:push` to apply changes to the linked project.
 * **Scripts:** `scripts/validate.js` is the source of truth for referential integrity across collections.
 * **Scaling:** Search is powered by **Pagefind**. It requires a production build (`npm run build`) to function.
 * **Directory Structure:**

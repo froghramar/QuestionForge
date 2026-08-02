@@ -11,7 +11,10 @@
     "build": "npm run build --prefix apps/website",
     "preview": "npm run preview --prefix apps/website",
     "validate": "node scripts/validate.js",
-    "test": "npm run validate"
+    "test": "npm run validate",
+    "db:push": "supabase db push",
+    "db:pull": "supabase db pull",
+    "db:reset": "supabase db reset"
   },
   "repository": {
     "type": "git",
