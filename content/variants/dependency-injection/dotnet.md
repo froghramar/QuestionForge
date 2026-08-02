@@ -3,7 +3,7 @@ id: variant.dependency-injection.dotnet
 question: question.dependency-injection
 technology: tech.dotnet
 ---
-# Expected Answer
+# Expected Answer (.NET 10 / C# 14)
 
 ASP.NET Core provides a built-in dependency injection (DI) container that manages the lifetime and resolution of services. The three primary service lifetimes are:
 

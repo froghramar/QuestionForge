@@ -3,7 +3,7 @@ id: variant.dotnet-disposal.dotnet
 question: question.dotnet-disposal
 technology: tech.dotnet
 ---
-# Expected Answer
+# Expected Answer (.NET 10 / C# 14)
 
 In .NET, the Garbage Collector (GC) manages **managed memory**, but it does not know how to clean up **unmanaged resources** (e.g., file handles, database connections, network sockets). The `IDisposable` interface provides a standard mechanism to release these resources deterministically.
 

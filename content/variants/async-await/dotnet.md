@@ -3,7 +3,7 @@ id: variant.async-await.dotnet
 question: question.async-await
 technology: tech.dotnet
 ---
-# Expected Answer
+# Expected Answer (.NET 10 / C# 14)
 
 In .NET, `async`/`await` is built on the **Task Parallel Library (TPL)**. An `async` method returns a `Task` or `Task<T>`, and the `await` keyword suspends execution until the awaited task completes — without blocking the calling thread.
 

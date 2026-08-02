@@ -3,7 +3,7 @@ id: variant.dotnet-tpl-async.dotnet
 question: question.dotnet-tpl-async
 technology: tech.dotnet
 ---
-# Expected Answer
+# Expected Answer (.NET 10 / C# 14)
 
 .NET provides different mechanisms for handling concurrency depending on whether the task is I/O-bound or CPU-bound:
 
