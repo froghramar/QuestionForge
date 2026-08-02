@@ -48,6 +48,15 @@ function isActive(path: string): boolean {
 				root.setAttribute('data-theme-preference', theme);
 			})();
 		</script>
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-50PFC8Y561" is:inline></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-50PFC8Y561');
+		</script>
 	</head>
 	<body>
 		<header class="site-header" data-pagefind-ignore>
