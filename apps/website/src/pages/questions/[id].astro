@@ -20,8 +20,17 @@ const allVariants = await getCollection('variants');
 const allTechnologies = await getCollection('technologies');
 
 const topic = allTopics.find(t => t.data.id === question.data.topic);
-const questionVariants = allVariants.filter(v => v.data.question === question.data.id);
 const techMap = new Map(allTechnologies.map(t => [t.data.id, t.data]));
+
+const questionVariants = allVariants
+	.filter(v => v.data.question === question.data.id)
+	.sort((a, b) => {
+		const techA = techMap.get(a.data.technology);
+		const techB = techMap.get(b.data.technology);
+		const orderA = techA?.order ?? 999;
+		const orderB = techB?.order ?? 999;
+		return orderA - orderB;
+	});
 
 const relatedConcepts = question.data.concepts
 	? question.data.concepts.map(id => allConcepts.find(c => c.data.id === id)).filter(Boolean)

@@ -19,6 +19,7 @@ const technologies = defineCollection({
 		slug: z.string(),
 		category: z.string(),
 		description: z.string().optional(),
+		order: z.number().optional(),
 	}),
 });
 
