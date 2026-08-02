@@ -1,0 +1,22 @@
+---
+id: question.angular-di-scopes
+title: Angular Dependency Injection Scopes
+slug: angular-di-scopes
+difficulty: Hard
+topic: topic.angular-fundamentals
+concepts:
+  - concept.angular-dependency-injection
+estimated_time: 20
+updated: 2026-08-02
+---
+
+## Why This Is Asked
+
+Dependency Injection is a pillar of Angular's architecture. Interviewers ask about scopes (Root, Platform, Component, and Resolution Modifiers) to see if you understand how Angular manages service instances, memory, and state. Knowing how to correctly scope a service is critical for preventing memory leaks and ensuring data is shared (or isolated) correctly across the application.
+
+## Key Concepts
+
+- **Tree-shakeable Providers:** Using `providedIn: 'root'`.
+- **Hierarchical Injectors:** The relationship between the Environment Injector and the Element Injector.
+- **`providedIn: 'root'` vs. Module Providers:** Differences in singleton behavior and bundle size.
+- **Resolution Modifiers:** `@Optional()`, `@SkipSelf()`, `@Self()`, and `@Host()`.

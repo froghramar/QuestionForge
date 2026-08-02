@@ -7,6 +7,8 @@ topics:
   - topic.javascript-fundamentals
   - topic.type-systems
   - topic.react-fundamentals
+  - topic.angular-fundamentals
+  - topic.angular-advanced
   - topic.design-patterns
   - topic.async-programming
   - topic.database-fundamentals
