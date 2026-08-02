@@ -1,6 +1,18 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { BookmarksList } from '../components/BookmarksList';
+
+const allQuestions = await getCollection('questions');
+const allTopics = await getCollection('topics');
+const topicMap = Object.fromEntries(allTopics.map(t => [t.data.id, t.data.title]));
+
+const questionsMetadata = allQuestions.map(q => ({
+	id: q.id,
+	title: q.data.title,
+	difficulty: q.data.difficulty,
+	topicTitle: topicMap[q.data.topic] || 'General'
+}));
 ---
 
 <Layout title="My Bookmarks" description="Review your bookmarked interview questions.">
@@ -9,7 +21,7 @@ import { BookmarksList } from '../components/BookmarksList';
 		<p class="page-header__subtitle">Your curated list of questions to master.</p>
 	</div>
 
-	<div style="max-width: 800px; margin-top: 2rem;">
-		<BookmarksList client:load />
+	<div style="max-width: 900px; margin-top: 2rem;">
+		<BookmarksList client:load questionsMetadata={questionsMetadata} />
 	</div>
 </Layout>
