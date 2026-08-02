@@ -69,32 +69,37 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({ questionId }) =>
     setLoading(false);
   };
 
-  if (!user && !loading) return null;
+  // Prevent flicker: return null during loading so nothing appears until we know the auth state.
+  // This ensures public users see nothing, and auth users see the button in its final correct state.
+  if (loading || !user) return null;
 
   return (
-    <button
-      onClick={toggleBookmark}
-      disabled={loading}
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-sm)] text-sm font-medium transition-all cursor-pointer border ${
-        isBookmarked 
-          ? 'bg-[var(--color-accent-muted)] text-[var(--color-accent)] border-[var(--color-accent)]' 
-          : 'bg-transparent text-[var(--color-text-secondary)] border-[var(--color-border-default)] hover:border-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]'
-      }`}
-      title={isBookmarked ? "Remove bookmark" : "Bookmark this question"}
-    >
-      <svg 
-        width="16" 
-        height="16" 
-        viewBox="0 0 24 24" 
-        fill={isBookmarked ? "currentColor" : "none"} 
-        stroke="currentColor" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
-        strokeLinejoin="round"
+    <>
+      <button
+        onClick={toggleBookmark}
+        disabled={loading}
+        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-sm)] text-sm font-medium transition-all cursor-pointer border ${
+          isBookmarked 
+            ? 'bg-[var(--color-accent-muted)] text-[var(--color-accent)] border-[var(--color-accent)]' 
+            : 'bg-transparent text-[var(--color-text-secondary)] border-[var(--color-border-default)] hover:border-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]'
+        }`}
+        title={isBookmarked ? "Remove bookmark" : "Bookmark this question"}
       >
-        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
-      </svg>
-      {isBookmarked ? 'Bookmarked' : 'Bookmark'}
-    </button>
+        <svg 
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill={isBookmarked ? "currentColor" : "none"} 
+          stroke="currentColor" 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+        >
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+        </svg>
+        {isBookmarked ? 'Bookmarked' : 'Bookmark'}
+      </button>
+      <div className="header-actions__divider" style={{ height: '16px' }}></div>
+    </>
   );
 };
