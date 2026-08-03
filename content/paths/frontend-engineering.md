@@ -9,5 +9,6 @@ topics:
   - topic.react-fundamentals
   - topic.angular-fundamentals
   - topic.angular-advanced
+  - topic.astro-fundamentals
 order: 1
 ---

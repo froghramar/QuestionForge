@@ -9,6 +9,7 @@ topics:
   - topic.react-fundamentals
   - topic.angular-fundamentals
   - topic.angular-advanced
+  - topic.astro-fundamentals
   - topic.design-patterns
   - topic.async-programming
   - topic.database-fundamentals
