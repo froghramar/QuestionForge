@@ -12,7 +12,6 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({ questionId }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session and check bookmark status
     const init = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       const currentUser = session?.user ?? null;
@@ -33,7 +32,6 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({ questionId }) =>
 
     init();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (!session) {
@@ -45,10 +43,7 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({ questionId }) =>
   }, [questionId]);
 
   const toggleBookmark = async () => {
-    if (!user) {
-      alert('Please sign in to bookmark questions.');
-      return;
-    }
+    if (!user) return;
 
     setLoading(true);
     if (isBookmarked) {
@@ -69,25 +64,27 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({ questionId }) =>
     setLoading(false);
   };
 
-  // Prevent flicker: return null during loading so nothing appears until we know the auth state.
-  // This ensures public users see nothing, and auth users see the button in its final correct state.
-  if (loading || !user) return null;
+  const isDisabled = !user || loading;
+  const tooltipText = !user 
+    ? "Sign in to bookmark questions" 
+    : isBookmarked ? "Remove bookmark" : "Bookmark this question";
 
   return (
     <>
       <button
         onClick={toggleBookmark}
-        disabled={loading}
-        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-sm)] text-sm font-medium transition-all cursor-pointer border ${
+        disabled={isDisabled}
+        className={`inline-flex items-center justify-center w-9 h-9 rounded-[var(--radius-sm)] transition-all border ${
           isBookmarked 
             ? 'bg-[var(--color-accent-muted)] text-[var(--color-accent)] border-[var(--color-accent)]' 
             : 'bg-transparent text-[var(--color-text-secondary)] border-[var(--color-border-default)] hover:border-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]'
-        }`}
-        title={isBookmarked ? "Remove bookmark" : "Bookmark this question"}
+        } ${!user ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+        title={tooltipText}
+        aria-label={tooltipText}
       >
         <svg 
-          width="16" 
-          height="16" 
+          width="18" 
+          height="18" 
           viewBox="0 0 24 24" 
           fill={isBookmarked ? "currentColor" : "none"} 
           stroke="currentColor" 
@@ -97,7 +94,6 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({ questionId }) =>
         >
           <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
         </svg>
-        {isBookmarked ? 'Bookmarked' : 'Bookmark'}
       </button>
       <div className="header-actions__divider" style={{ height: '16px' }}></div>
     </>
