@@ -3,7 +3,6 @@ import '../styles/global.css';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 import GlobalSearch from '../components/GlobalSearch.astro';
 import { Auth } from '../components/Auth';
-import { BookmarksNavLink } from '../components/BookmarksNavLink';
 
 interface Props {
 	title: string;
@@ -83,7 +82,6 @@ function isActive(path: string): boolean {
 						<a href="/questions" class:list={['site-nav__link', { 'site-nav__link--active': isActive('/questions') }]}>Questions</a>
 						<a href="/topics" class:list={['site-nav__link', { 'site-nav__link--active': isActive('/topics') }]}>Topics</a>
 						<a href="/paths" class:list={['site-nav__link', { 'site-nav__link--active': isActive('/paths') }]}>Paths</a>
-						<BookmarksNavLink client:load isActive={isActive('/bookmarks')} />
 					</nav>
 
 					<div class="header-actions">
