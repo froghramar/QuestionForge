@@ -1,6 +1,6 @@
 ---
-id: variant.python-scope.python
-question: question.python-scope
+id: variant.closures.python
+question: question.closures
 technology: tech.python
 ---
 # Expected Answer (Python 3.14)

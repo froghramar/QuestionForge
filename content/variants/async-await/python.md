@@ -1,6 +1,6 @@
 ---
-id: variant.python-asyncio.python
-question: question.python-asyncio
+id: variant.async-await.python
+question: question.async-await
 technology: tech.python
 ---
 # Expected Answer (Python 3.14)

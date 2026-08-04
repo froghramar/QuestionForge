@@ -1,6 +1,6 @@
 ---
-id: variant.rust-async.rust
-question: question.rust-async
+id: variant.async-await.rust
+question: question.async-await
 technology: tech.rust
 ---
 # Expected Answer (Rust 1.97.1)

@@ -1,6 +1,6 @@
 ---
-id: variant.rust-drop-and-raii.rust
-question: question.rust-drop-and-raii
+id: variant.dotnet-disposal.rust
+question: question.dotnet-disposal
 technology: tech.rust
 ---
 # Expected Answer (Rust 1.97.1)

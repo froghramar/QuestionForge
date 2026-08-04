@@ -1,6 +1,6 @@
 ---
-id: variant.python-context-managers.python
-question: question.python-context-managers
+id: variant.dotnet-disposal.python
+question: question.dotnet-disposal
 technology: tech.python
 ---
 # Expected Answer (Python 3.14)
