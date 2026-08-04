@@ -7,6 +7,7 @@ topics:
   - topic.javascript-fundamentals
   - topic.type-systems
   - topic.react-fundamentals
+  - topic.vue-fundamentals
   - topic.angular-fundamentals
   - topic.angular-advanced
   - topic.astro-fundamentals
