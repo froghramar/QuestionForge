@@ -17,18 +17,17 @@ For invalidation, you usually use a **TTL (Time To Live)** for a simple approach
 
 Proper caching can make an application feel instantaneous and reduce database costs by 90%. However, poor caching leads to "stale data" bugs that are notoriously difficult to debug, where a user sees old information even after an update.
 
-# Example Code (Pseudo-code for Cache-Aside)
+# Example Code
 
-```javascript
-async function getUser(id) {
-  // 1. Check cache
+```typescript
+interface User { id: string; name: string; }
+
+async function getUser(id: string): Promise<User | null> {
   const cachedUser = await cache.get(`user:${id}`);
-  if (cachedUser) return JSON.parse(cachedUser);
+  if (cachedUser) return JSON.parse(cachedUser) as User;
 
-  // 2. Cache Miss: Query DB
   const user = await db.users.find(id);
 
-  // 3. Update Cache (with a 1-hour TTL)
   if (user) {
     await cache.set(`user:${id}`, JSON.stringify(user), 'EX', 3600);
   }
