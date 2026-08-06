@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-An agent returns the wrong answer after several tool calls. Design traces and evaluation so an engineer can identify whether planning, retrieval, tool selection, arguments, or tool output caused the failure.
+This tests whether a candidate can make multi-step agent failures observable and reproducible. Interviewers assess causal tracing, privacy controls, failure taxonomy, and converting incidents into regression evaluations.
 ## Key Concepts
 - **Trace:** Record model turns, tool calls, tool results, state transitions, and timings.
 - **Privacy:** Redact secrets and apply access controls to traces.
@@ -17,3 +17,4 @@ An agent returns the wrong answer after several tool calls. Design traces and ev
 ## Question Variations
 - "What should an agent trace contain?"
 - "How would you turn an incident into an evaluation case?"
+- "An agent gave a wrong answer after several tool calls. How would you isolate the failed stage and prevent recurrence?"

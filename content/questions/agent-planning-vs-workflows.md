@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-Your team wants an autonomous agent for a fixed employee-onboarding process. Explain when a deterministic workflow is safer, where model judgment adds value, and how to bound agent autonomy.
+This evaluates whether a candidate can choose agentic behavior only where it adds value. Interviewers look for a clear boundary between deterministic workflows and model judgment, plus explicit limits on tools, cost, time, and approvals.
 ## Key Concepts
 - **Deterministic steps:** Use conventional workflows for known sequences and policy-critical actions.
 - **Model judgment:** Reserve agents for ambiguous classification, drafting, or exploration.
@@ -17,3 +17,4 @@ Your team wants an autonomous agent for a fixed employee-onboarding process. Exp
 ## Question Variations
 - "Which onboarding actions should never be agent-selected?"
 - "How do you set an agent's tool-call budget?"
+- "Would you use an autonomous agent for employee onboarding? Defend the workflow and autonomy boundary."

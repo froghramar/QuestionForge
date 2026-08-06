@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-An agent must book travel, but one tool times out after possibly making a reservation. Design state, idempotency, retry, and user communication so it neither silently abandons nor duplicates work.
+This tests whether a candidate can make an agent recover safely from ambiguous external side effects. Interviewers assess durable workflow state, idempotency, bounded retry, reconciliation, and honest user-visible status.
 ## Key Concepts
 - **Durable state:** Persist workflow step, inputs, and external operation IDs.
 - **Idempotency:** Use stable operation keys and query status before retrying.
@@ -17,3 +17,4 @@ An agent must book travel, but one tool times out after possibly making a reserv
 ## Question Variations
 - "How does an agent distinguish a timeout from a failed action?"
 - "What state must survive an agent restart?"
+- "A travel-booking tool times out after possibly reserving a flight. How should the agent recover?"

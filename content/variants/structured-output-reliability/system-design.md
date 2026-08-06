@@ -4,7 +4,7 @@ question: question.structured-output-reliability
 technology: tech.system-design
 ---
 # Expected Answer
-Request schema-constrained output, then validate syntax, types, ranges, business rules, and authorization outside the model. Retry bounded repairs for malformed output; route uncertain invoices to review. Extraction proposes data, never authorizes payment.
+I use schema-constrained output to reduce parsing failures, but treat it only as a proposal. Application code validates types, ranges, required relationships, supplier identity, and authorization before any payment action. A malformed result gets a bounded repair retry; an ambiguous or low-confidence invoice goes to review. This separates probabilistic extraction from deterministic financial control.
 # Why It Matters
 Valid JSON can still contain an incorrect account or amount.
 # Common Mistakes

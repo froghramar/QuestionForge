@@ -4,7 +4,7 @@ question: question.mcp-untrusted-tool-output
 technology: tech.system-design
 ---
 # Expected Answer
-Treat every tool result as untrusted data. Validate structured output against a schema, preserve provenance, and prevent returned text from changing tool permissions or policy. Server-side authorization and confirmation remain mandatory for every downstream call. Limit accessible tools and chain depth.
+I treat search and tool output as untrusted content, even when it resembles an instruction. I prefer structured, schema-validated results with provenance, and the application decides what fields may be used. A result cannot expand the agent's tool set, bypass authorization, or remove confirmation requirements. I also limit chained calls and sensitive data exposure.
 # Why It Matters
 Indirect prompt injection commonly arrives through retrieved or tool-provided content.
 # Common Mistakes

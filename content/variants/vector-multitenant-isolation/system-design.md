@@ -4,7 +4,7 @@ question: question.vector-multitenant-isolation
 technology: tech.system-design
 ---
 # Expected Answer
-Derive tenant and document permissions from the authenticated caller, then apply them as a mandatory retrieval filter before results reach the model. Store trusted authorization metadata with each vector, validate it at ingestion, and check it again in application code. Use separate indexes when regulatory or blast-radius requirements demand stronger physical isolation. Include cross-tenant adversarial queries in tests and log denied-filter behavior without logging content.
+Similarity must never decide access. I derive tenant and permission filters from the authenticated identity, apply them before ranking, and validate the returned documents again in the application. Ingestion owns trusted access metadata; callers never supply it. Separate indexes are justified when legal isolation or blast radius requires it. I would test adversarial cross-tenant queries and audit filter decisions without logging document contents.
 # Why It Matters
 Similarity is not authorization; one leaked chunk can expose another customer's data.
 # Common Mistakes

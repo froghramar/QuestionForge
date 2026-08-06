@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-Your RAG assistant's answers worsened after changing chunking. Design an offline and online evaluation plan that separates retrieval failures from generation failures.
+This tests whether a candidate can make RAG quality measurable and diagnose regressions rather than judging answers by fluency. Interviewers look for separate retrieval and generation evaluation, a representative corpus, and release decisions based on evidence.
 ## Key Concepts
 - **Golden set:** Versioned queries, expected evidence, and judged answers.
 - **Retrieval metrics:** Recall at k, ranking quality, and citation correctness.
@@ -17,3 +17,4 @@ Your RAG assistant's answers worsened after changing chunking. Design an offline
 ## Question Variations
 - "How would you tell whether the retriever or LLM caused a bad answer?"
 - "What belongs in a RAG evaluation dataset?"
+- "A chunking change reduced answer quality. How would you isolate and prevent the regression?"

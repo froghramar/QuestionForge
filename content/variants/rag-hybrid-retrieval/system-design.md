@@ -4,7 +4,7 @@ question: question.rag-hybrid-retrieval
 technology: tech.system-design
 ---
 # Expected Answer
-Run lexical and vector retrieval in parallel. Lexical retrieval protects exact identifiers, product codes, and quoted errors; vector retrieval catches paraphrase and semantic similarity. Fuse bounded candidate lists with reciprocal-rank fusion or a calibrated score, then apply a reranker to the small merged set. Preserve source metadata and enforce authorization before prompt construction. Measure recall by query class and reserve a fixed latency budget for each stage; fall back to the faster candidate set if the reranker times out.
+I would use lexical and vector retrieval as complementary candidate generators. Exact identifiers, error codes, and quoted phrases favor lexical search; paraphrases favor embeddings. Run both in parallel, fuse small candidate sets, then rerank only the merged top results. Measure recall by query class and reserve a latency budget for each stage, with a fallback when reranking times out. Authorization filters apply before context assembly.
 # Why It Matters
 Vector-only search often misses the precise token a support user needs.
 # Common Mistakes

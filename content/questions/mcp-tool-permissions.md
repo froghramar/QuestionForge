@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-An assistant can call tools that read customer data and issue refunds. Design MCP tool boundaries, authorization, confirmation, and auditability so a compromised prompt cannot perform an unsafe action.
+This tests whether a candidate distinguishes an LLM's tool selection from actual authority. Interviewers assess least-privilege tool design, server-side authorization, confirmation for consequential actions, and auditability.
 ## Key Concepts
 - **Least privilege:** Expose narrow tools with scoped credentials.
 - **Authorization:** Enforce identity and policy at the tool server, not in model instructions.
@@ -17,3 +17,4 @@ An assistant can call tools that read customer data and issue refunds. Design MC
 ## Question Variations
 - "Why is an MCP tool description not an authorization boundary?"
 - "Which actions require human confirmation?"
+- "Design MCP tools for customer-data access and refunds so prompt compromise cannot issue an unsafe refund."

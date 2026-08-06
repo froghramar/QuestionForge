@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-An embedding-model upgrade requires re-indexing millions of documents without degrading live search. Describe dual indexing, backfill, validation, and cutover.
+This tests whether a candidate can operate an embedding migration as a safe production rollout. Interviewers assess versioning, backfill completeness, shadow evaluation, gradual cutover, and rollback rather than a risky in-place rebuild.
 ## Key Concepts
 - **Versioning:** Store embedding model and chunker version with each vector.
 - **Dual read/write:** Build a new index while serving the proven one.
@@ -17,3 +17,4 @@ An embedding-model upgrade requires re-indexing millions of documents without de
 ## Question Variations
 - "Why should embeddings be versioned?"
 - "How would you roll back a bad embedding migration?"
+- "How would you upgrade embeddings for millions of documents without disrupting search?"

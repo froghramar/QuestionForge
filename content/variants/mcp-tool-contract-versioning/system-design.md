@@ -4,7 +4,7 @@ question: question.mcp-tool-contract-versioning
 technology: tech.system-design
 ---
 # Expected Answer
-Evolve tool schemas additively with optional fields and safe defaults. For a required semantic change, create a new versioned tool, support both during migration, measure usage, and deprecate deliberately. Validate requests at the server and return stable, machine-readable errors.
+I evolve tools additively where possible: optional fields and safe defaults preserve existing clients. If a new project field changes semantics and must be required, I expose a new versioned tool, support both versions during migration, validate at the server, and use telemetry to retire the old one. Silent meaning changes are worse than an explicit break.
 # Why It Matters
 Tool clients update independently and a breaking schema can halt automated work.
 # Common Mistakes

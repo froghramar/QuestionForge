@@ -4,7 +4,7 @@ question: question.vector-chunking-strategy
 technology: tech.system-design
 ---
 # Expected Answer
-Chunk on semantic boundaries such as headings, paragraphs, tables, and code blocks, retaining parent title and source offsets. Use modest overlap only where sentences span a boundary. Store hierarchy and document version as metadata. Evaluate candidate recall and citation usefulness on queries requiring tables, code, and cross-section context; tune chunking empirically rather than selecting one token size globally.
+I would preserve document structure first: split at headings and coherent paragraphs, keep tables and code blocks intact, and attach parent heading, source offsets, version, and permissions. Overlap is a small continuity aid, not a substitute for meaningful boundaries. Then test chunk sizes on real questions that require tables, code, and cross-section context; choose the configuration that improves evidence recall without flooding the prompt with unrelated text.
 # Why It Matters
 Bad chunks either omit needed context or retrieve too much unrelated text.
 # Common Mistakes

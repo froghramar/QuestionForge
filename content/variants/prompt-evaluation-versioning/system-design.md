@@ -4,7 +4,7 @@ question: question.prompt-evaluation-versioning
 technology: tech.system-design
 ---
 # Expected Answer
-Version prompts with model, tool schema, decoding settings, and evaluation data. Run a regression suite covering normal, formatting, edge, and safety cases; release with canaries and rollback thresholds. Record sanitized traces and outcomes so regressions are attributable.
+I version the prompt together with model, decoding settings, tool schemas, and evaluation data, because any of them can change behavior. A regression suite covers normal tasks, strict formats, edge cases, and safety cases. I compare against a baseline, canary release, define rollback thresholds, and retain sanitized traces so a failure can be attributed to a specific configuration change.
 # Why It Matters
 A small prompt edit can break an implicit production contract.
 # Common Mistakes

@@ -4,7 +4,7 @@ question: question.agent-tool-recovery
 technology: tech.system-design
 ---
 # Expected Answer
-Persist workflow state, inputs, operation IDs, and idempotency keys before calling the booking tool. On timeout, query status using the stable key before retrying. Bound retries, surface pending status to the user, and escalate unresolved ambiguity rather than claiming success.
+I persist the workflow step, normalized inputs, idempotency key, and external operation ID before calling the booking API. A timeout means the outcome is unknown, so the agent queries status with the stable key before retrying. Retries are bounded, unresolved ambiguity becomes a visible pending state, and recovery survives process restart. That prevents a polite but incorrect claim of success or a duplicate reservation.
 # Why It Matters
 External side effects can succeed even when the agent never receives a reply.
 # Common Mistakes

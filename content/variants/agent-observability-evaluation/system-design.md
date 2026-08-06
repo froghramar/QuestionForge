@@ -4,7 +4,7 @@ question: question.agent-observability-evaluation
 technology: tech.system-design
 ---
 # Expected Answer
-Trace model turns, state changes, tool selection, arguments, results, timing, and policy decisions using a correlation ID. Redact secrets and restrict trace access. Label incidents by retrieval, planning, arguments, tool output, or execution, then turn each into a replayable evaluation case.
+I trace each model turn, state transition, selected tool, validated arguments, result, policy decision, and timing under one correlation ID. Traces are redacted and access controlled. When an incident occurs, I label the failing stage—retrieval, planning, argument construction, tool result, or execution—then add a sanitized replay case to the evaluation suite. That turns incidents into measurable regressions instead of anecdotes.
 # Why It Matters
 Without traces, an agent failure is an unverifiable story rather than a fixable defect.
 # Common Mistakes

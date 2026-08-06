@@ -4,7 +4,7 @@ question: question.vector-index-rebuild
 technology: tech.system-design
 ---
 # Expected Answer
-Version embeddings by model and chunker. Backfill a new index while the old index serves traffic, dual-write new documents, and compare retrieval quality, latency, cost, and authorization behavior on a golden set and shadow traffic. Shift traffic gradually behind a feature flag and retain the old index for rollback until freshness is proven. Reconciliation ensures every current source has a new-version vector.
+Treat an embedding change like a schema migration. Version the model and chunker, build a new index while serving the old one, dual-write new documents, and reconcile backfill completeness. Compare both paths on a golden set and shadow traffic for recall, latency, cost, and permission behavior. Shift traffic gradually behind a flag and keep the old index until rollback is no longer needed.
 # Why It Matters
 An embedding migration can silently degrade search for the whole corpus.
 # Common Mistakes

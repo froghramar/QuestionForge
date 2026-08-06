@@ -4,7 +4,7 @@ question: question.mcp-tool-permissions
 technology: tech.system-design
 ---
 # Expected Answer
-Tools expose narrow operations and use user-scoped credentials. The MCP server independently authenticates the caller, authorizes every argument, and records the policy decision. Reads are scoped; refunds require explicit confirmation and limits. Tool descriptions help the model choose, but never grant authority.
+I would design MCP tools as narrow capabilities, not a general API wrapper. The server authenticates the user, authorizes every argument, and uses scoped credentials; the model only proposes a call. Reads are filtered to the caller's scope, while refunds require explicit confirmation, amount limits, and an audit record. Tool descriptions aid selection but never grant permission.
 # Why It Matters
 Prompt compromise must not become account compromise.
 # Common Mistakes

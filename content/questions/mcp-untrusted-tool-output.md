@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-A web-search MCP server returns text instructing the model to disclose system prompts and call a payment tool. Explain how to treat tool output as untrusted data and constrain downstream actions.
+This evaluates whether a candidate understands indirect prompt injection and can enforce trust boundaries around tool results. Interviewers look for structured validation, provenance, independent policy checks, and limits on chained actions.
 ## Key Concepts
 - **Data boundary:** Tool results are content, never instructions with authority.
 - **Validation:** Parse structured outputs and validate schemas and provenance.
@@ -17,3 +17,4 @@ A web-search MCP server returns text instructing the model to disclose system pr
 ## Question Variations
 - "How does indirect prompt injection reach an agent?"
 - "Why is output schema validation useful?"
+- "A search tool returns instructions to disclose prompts and call a payment tool. How do you contain the attack?"

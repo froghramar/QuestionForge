@@ -4,9 +4,11 @@ question: question.rag-evaluation-regressions
 technology: tech.system-design
 ---
 # Expected Answer
-Build a versioned golden set containing user queries, expected source passages, acceptable answers, and known refusal cases. Measure retrieval recall at k and citation support separately from groundedness and answer correctness. Run every chunking, embedding, retrieval, prompt, and model change against the baseline; segment results by document type and query class. In production, sample judged traces and monitor citation coverage, no-answer rate, latency, and feedback. A regression is investigated by first checking whether the expected evidence appeared in candidates, then whether the model used it correctly.
+I would not use one end-to-end “answer quality” score, because it cannot tell the team what broke. First create a versioned evaluation set with real queries, the passages that should support each answer, acceptable answers, and cases where the assistant must decline. For every change, measure retrieval recall@k and ranking quality before measuring groundedness, correctness, citation accuracy, latency, and cost. Segment results: a chunking change may improve short FAQ queries while damaging table-heavy manuals.
+
+If an answer regresses, inspect the trace in order: was the right document ingested, did retrieval return it, did reranking retain it, and did the model use it faithfully? That sequence separates an indexing defect from a retrieval defect or a generation defect. I would gate rollout on a baseline comparison, canary the change, and feed sampled production failures back into the evaluation set.
 # Why It Matters
-End-to-end quality scores hide whether a change broke search or generation.
+Without this separation, teams tune prompts for a problem caused by missing evidence, or change embeddings for a model-behavior problem. The result is expensive iteration with no reliable quality signal.
 # Common Mistakes
 - **Judging only fluent answers:** Fluent output can still be unsupported.
 - **Using an unversioned test set:** Results cannot be reproduced after corpus changes.

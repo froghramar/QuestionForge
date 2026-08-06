@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-A support assistant reads emails and knowledge-base pages before it can call account tools. Design defenses against prompt injection without assuming a system prompt can reliably override hostile content.
+This tests whether a candidate understands prompt injection as an application-security problem rather than a prompt-writing problem. Interviewers assess untrusted-context handling, capability controls, authorization, and adversarial evaluation.
 ## Key Concepts
 - **Untrusted context:** Retrieved text is data, not privileged instruction.
 - **Capability controls:** Sensitive actions require server-side authorization and confirmation.
@@ -17,3 +17,4 @@ A support assistant reads emails and knowledge-base pages before it can call acc
 ## Question Variations
 - "Why can't prompt wording alone prevent injection?"
 - "How would you test an agent against retrieved malicious text?"
+- "How would you secure a support assistant that reads untrusted emails before using account tools?"

@@ -4,7 +4,7 @@ question: question.agent-planning-vs-workflows
 technology: tech.system-design
 ---
 # Expected Answer
-Use deterministic workflows for fixed, policy-critical onboarding steps. Introduce model judgment only for ambiguous classification, drafting, or information gathering, with scoped tools, budgets, and approvals. Evaluate task completion, cost, violations, and human intervention before increasing autonomy.
+For fixed onboarding steps, I use a deterministic workflow because it is auditable and predictable. I introduce model judgment only for tasks like classifying unstructured requests or drafting a response. The agent has scoped tools, call and cost budgets, time limits, and approval gates for consequential actions. I measure completion, policy violations, cost, and human intervention before expanding autonomy.
 # Why It Matters
 Autonomy adds nondeterminism where predictable automation may be safer.
 # Common Mistakes

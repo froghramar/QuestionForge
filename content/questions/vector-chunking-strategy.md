@@ -8,7 +8,7 @@ estimated_time: 20
 updated: 2026-08-06
 ---
 ## Why This Is Asked
-You must index long technical manuals containing headings, tables, and code. Explain chunk boundaries, overlap, metadata, and how you would evaluate whether the chunking strategy works.
+This tests whether a candidate understands that chunking determines what evidence retrieval can return. Interviewers assess semantic boundaries, metadata preservation, and an empirical method for balancing context completeness against retrieval precision.
 ## Key Concepts
 - **Semantic boundaries:** Preserve sections and parent context rather than splitting arbitrary token counts.
 - **Chunk size:** Balance retrieval precision against sufficient answer context.
@@ -17,3 +17,4 @@ You must index long technical manuals containing headings, tables, and code. Exp
 ## Question Variations
 - "Why can large chunks reduce retrieval precision?"
 - "How should tables and code blocks be chunked?"
+- "How would you chunk a technical manual containing headings, tables, and code?"
