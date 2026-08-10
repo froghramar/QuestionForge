@@ -1,0 +1,79 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const concepts = await getCollection('concepts');
+	return concepts.map((concept) => ({
+		params: { slug: concept.data.slug },
+		props: { concept },
+	}));
+}
+
+const { concept } = Astro.props;
+const { Content } = await render(concept);
+
+const allQuestions = await getCollection('questions');
+const allTopics = await getCollection('topics');
+
+const topic = allTopics.find(t => t.data.id === concept.data.topic);
+const relatedQuestions = allQuestions.filter(q => 
+	q.data.concepts?.includes(concept.data.id)
+);
+
+function getDifficultyClass(diff: string): string {
+	return `badge--${diff.toLowerCase()}`;
+}
+---
+
+<Layout title={concept.data.title} description={concept.data.description || `Technical deep dive into ${concept.data.title}.`}>
+	<nav class="breadcrumbs" aria-label="Breadcrumb">
+		<a href="/concepts">Concepts</a>
+		<span class="breadcrumbs__separator">/</span>
+		{topic && (
+			<>
+				<a href={`/topics/${topic.data.slug}`} style="color: var(--color-text-secondary); text-decoration: none;">{topic.data.title}</a>
+				<span class="breadcrumbs__separator">/</span>
+			</>
+		)}
+		<span class="breadcrumbs__current">{concept.data.title}</span>
+	</nav>
+
+	<header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+		<div>
+			<h1 class="page-header__title">{concept.data.title}</h1>
+			{concept.data.description && <p class="page-header__subtitle">{concept.data.description}</p>}
+		</div>
+		<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/concepts/${concept.data.id.replace('concept.', '')}.md`} target="_blank" rel="noopener" class="filter-btn" style="text-decoration: none; font-size: 0.75rem;">
+			Edit Concept ✏️
+		</a>
+	</header>
+
+	<div class="layout-sidebar">
+		<div class="layout-sidebar__main">
+			<article class="prose">
+				<Content />
+			</article>
+		</div>
+
+		<aside class="layout-sidebar__side">
+			{relatedQuestions.length > 0 && (
+				<section>
+					<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 1rem;">
+						Related Questions
+					</h2>
+					<div style="display: grid; gap: 0.75rem;">
+						{relatedQuestions.map((question) => (
+							<a href={`/questions/${question.id}`} class="card card--interactive" style="padding: 0.75rem;">
+								<div class="card__header" style="margin-bottom: 0.25rem;">
+									<span class={`badge ${getDifficultyClass(question.data.difficulty)}`} style="font-size: 0.625rem; padding: 0.125rem 0.375rem;">{question.data.difficulty}</span>
+								</div>
+								<h3 class="card__title" style="font-size: 0.875rem;">{question.data.title}</h3>
+							</a>
+						))}
+					</div>
+				</section>
+			)}
+		</aside>
+	</div>
+</Layout>

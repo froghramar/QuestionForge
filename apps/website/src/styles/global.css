@@ -1072,6 +1072,32 @@ a:hover {
 }
 
 /* ============================================================
+   Layout Utilities
+   ============================================================ */
+
+.layout-sidebar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .layout-sidebar {
+    grid-template-columns: 1fr 300px;
+  }
+}
+
+.layout-sidebar__main {
+  min-width: 0;
+}
+
+.layout-sidebar__side {
+  position: sticky;
+  top: 88px;
+}
+
+/* ============================================================
    Scrollbar (subtle)
    ============================================================ */
 

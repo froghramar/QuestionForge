@@ -11,24 +11,21 @@ Kafka stores records in append-only topic partitions.
 graph LR
     subgraph Topic [Kafka Topic]
         direction TB
-        P0[Partition 0]
-        P1[Partition 1]
-        P2[Partition 2]
-        P3[Partition 3]
+        P0[(Partition 0)]
+        P1[(Partition 1)]
+        P2[(Partition 2)]
+        P3[(Partition 3)]
     end
 
     subgraph GroupA [Consumer Group A]
-        C1[Consumer 1]
-        C2[Consumer 2]
+        C1((Consumer 1))
+        C2((Consumer 2))
     end
 
     P0 --> C1
     P1 --> C1
     P2 --> C2
     P3 --> C2
-
-    style Topic fill:var(--color-surface-raised),stroke:var(--color-border-default)
-    style GroupA fill:var(--color-accent-subtle),stroke:var(--color-accent)
 ```
 
 Each partition has a total order, but there is no total order across a topic's partitions. A record key is typically hashed to select a partition, so use the aggregate key—such as `orderId`—when events for that aggregate must remain ordered. Partitions also set the maximum useful consumer parallelism for one consumer group: only one member owns a given partition at a time. Extra consumers beyond the partition count are idle.

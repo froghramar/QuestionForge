@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const technologies = await getCollection('technologies');
+	return technologies.map((tech) => ({
+		params: { slug: tech.data.slug },
+		props: { tech },
+	}));
+}
+
+const { tech } = Astro.props;
+
+const allVariants = await getCollection('variants');
+const allQuestions = await getCollection('questions');
+const allCategories = await getCollection('categories');
+
+const category = allCategories.find(c => c.data.id === tech.data.category);
+
+const techVariants = allVariants.filter(v => v.data.technology === tech.data.id);
+const questionIds = techVariants.map(v => v.data.question);
+const techQuestions = allQuestions.filter(q => questionIds.includes(q.data.id));
+
+// Sort by difficulty
+const diffOrder: Record<string, number> = { Beginner: 0, Easy: 1, Medium: 2, Hard: 3, Expert: 4 };
+const sortedQuestions = techQuestions.sort((a, b) =>
+	(diffOrder[a.data.difficulty] || 0) - (diffOrder[b.data.difficulty] || 0)
+);
+
+function getDifficultyClass(diff: string): string {
+	return `badge--${diff.toLowerCase()}`;
+}
+---
+
+<Layout title={tech.data.name} description={tech.data.description || `Interview questions and answers for ${tech.data.name}.`}>
+	<nav class="breadcrumbs" aria-label="Breadcrumb">
+		<a href="/technologies">Technologies</a>
+		<span class="breadcrumbs__separator">/</span>
+		{category && (
+			<>
+				<span style="color: var(--color-text-secondary);">{category.data.title}</span>
+				<span class="breadcrumbs__separator">/</span>
+			</>
+		)}
+		<span class="breadcrumbs__current">{tech.data.name}</span>
+	</nav>
+
+	<header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+		<div>
+			<h1 class="page-header__title">{tech.data.name}</h1>
+			{tech.data.description && <p class="page-header__subtitle">{tech.data.description}</p>}
+		</div>
+		<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/technologies/${tech.data.id.replace('tech.', '')}.md`} target="_blank" rel="noopener" class="filter-btn" style="text-decoration: none; font-size: 0.75rem;">
+			Edit Tech ✏️
+		</a>
+	</header>
+
+	<section>
+		<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 1rem;">
+			Questions with {tech.data.name} variants <span style="font-weight: 400;">({sortedQuestions.length})</span>
+		</h2>
+		<div class="question-grid stagger-children">
+			{sortedQuestions.map((question) => (
+				<a href={`/questions/${question.id}`} class="card card--interactive">
+					<div class="card__header">
+						<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
+						<span class="question-card__time">
+							<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+							{question.data.estimated_time}m
+						</span>
+					</div>
+					<h3 class="card__title">{question.data.title}</h3>
+				</a>
+			))}
+		</div>
+	</section>
+</Layout>

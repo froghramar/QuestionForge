@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allTechnologies = await getCollection('technologies');
+const allCategories = await getCollection('categories');
+const allVariants = await getCollection('variants');
+
+const technologiesByCategory = new Map();
+
+allTechnologies.forEach(tech => {
+	const variants = allVariants.filter(v => v.data.technology === tech.data.id);
+	const info = {
+		tech: tech.data,
+		slug: tech.data.slug,
+		variantCount: variants.length,
+	};
+
+	const catId = tech.data.category;
+	const list = technologiesByCategory.get(catId) || [];
+	list.push(info);
+	technologiesByCategory.set(catId, list);
+});
+---
+
+<Layout title="Technologies" description="Browse interview questions by technology stack.">
+	<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+		<div>
+			<h1 class="page-header__title">Technologies</h1>
+			<p class="page-header__subtitle">Explore questions tailored to specific tools and frameworks</p>
+		</div>
+		<a href="https://github.com/froghramar/QuestionForge/tree/main/content/technologies" target="_blank" rel="noopener" class="filter-btn filter-btn--active" style="text-decoration: none; font-size: 0.8125rem;">
+			+ Propose Tech
+		</a>
+	</div>
+
+	{allCategories.map(cat => {
+		const techs = technologiesByCategory.get(cat.data.id) || [];
+		if (techs.length === 0) return null;
+		return (
+			<div class="category-section">
+				<h2 class="category-section__title">
+					<span class={`badge ${cat.data.id === 'category.frontend' ? 'badge--frontend' : 'badge--backend'}`} style="margin-right: 0.5rem; vertical-align: middle;">
+						{cat.data.title}
+					</span>
+				</h2>
+
+				<div class="topic-grid stagger-children">
+					{techs.map(({ tech, slug, variantCount }) => (
+						<a href={`/technologies/${slug}`} class="card card--interactive">
+							<h3 class="card__title" style="font-size: 1.125rem; margin-bottom: 0.25rem;">{tech.name}</h3>
+							{tech.description && (
+								<p style="font-size: 0.8125rem; color: var(--color-text-secondary); margin: 0 0 0.75rem; line-height: 1.5;">{tech.description}</p>
+							)}
+							<span class="topic-card__count">{variantCount} specialized answers</span>
+						</a>
+					))}
+				</div>
+			</div>
+		);
+	})}
+</Layout>

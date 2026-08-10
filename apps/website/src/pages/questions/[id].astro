@@ -109,7 +109,7 @@ function getDifficultyClass(diff: string): string {
 				<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
 					<span style="font-size: 0.75rem; color: var(--color-text-tertiary); font-weight: 600; align-self: center; margin-right: 0.25rem;">CONCEPTS:</span>
 					{relatedConcepts.map((concept) => concept && (
-						<a href={`/concepts/${concept.data.id.replace('concept.', '')}`} class="badge badge--tech">{concept.data.title}</a>
+						<a href={`/concepts/${concept.data.slug}`} class="badge badge--tech">{concept.data.title}</a>
 					))}
 				</div>
 			)}
