@@ -5,7 +5,27 @@ technology: tech.koa
 ---
 # Expected Answer (Koa 3.2.1 / Node.js 18+)
 
-Koa composes async middleware in a cascade. Code before `await next()` runs while the request moves downstream; code after it runs as the stack unwinds upstream. Middleware registered first is the outermost wrapper. This makes timing, transaction cleanup, response transformation, and global errors natural: wrap `await next()` and act once downstream middleware has completed.
+Koa composes async middleware in a cascade. 
+
+```mermaid
+sequenceDiagram
+    participant Request
+    participant M1 as Middleware 1
+    participant M2 as Middleware 2
+    participant Handler
+    
+    Request->>M1: enter
+    M1->>M2: await next()
+    M2->>Handler: await next()
+    Handler-->>M2: return
+    M2-->>M1: return from next()
+    M1-->>Request: Response
+    
+    Note over M1,Handler: Downstream (Before next)
+    Note over Handler,M1: Upstream (After next)
+```
+
+Code before `await next()` runs while the request moves downstream; code after it runs as the stack unwinds upstream. Middleware registered first is the outermost wrapper. This makes timing, transaction cleanup, response transformation, and global errors natural: wrap `await next()` and act once downstream middleware has completed.
 
 Calling no `next()` intentionally short-circuits the request, which is appropriate for authentication rejection or a cached response. Accidentally omitting it prevents later routes from running. Unlike a linear callback pipeline, Koa middleware can reliably perform work both before and after the handler through normal `async` control flow.
 

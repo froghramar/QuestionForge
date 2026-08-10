@@ -5,7 +5,19 @@ technology: tech.system-design
 ---
 # Expected Answer
 
-Command Query Responsibility Segregation (CQRS) separates the model that validates and applies state changes from the models that answer reads. The write side accepts a command, checks authorization and business invariants, changes authoritative state, and emits a durable change notification. The read side consumes those changes to build denormalized projections shaped for specific screens or query patterns. This is valuable when reads and writes have very different scaling, data-shaping, or security needs; it is not an automatic reason to run two databases for a simple CRUD application.
+Command Query Responsibility Segregation (CQRS) separates the model that validates and applies state changes from the models that answer reads. 
+
+```mermaid
+graph LR
+    User[Client / UI] -->|Command| CommandModel[Command Model / Write]
+    CommandModel -->|Validate & Commit| WriteDB[(Authoritative DB)]
+    WriteDB -->|Emit Events / Logs| Bus{Event Bus / Queue}
+    Bus -->|Consume| Projection[Projection Handler]
+    Projection -->|Upsert Denormalized| ReadDB[(Read DB / Cache)]
+    User -->|Query| ReadDB
+```
+
+The write side accepts a command, checks authorization and business invariants, changes authoritative state, and emits a durable change notification. The read side consumes those changes to build denormalized projections shaped for specific screens or query patterns. This is valuable when reads and writes have very different scaling, data-shaping, or security needs; it is not an automatic reason to run two databases for a simple CRUD application.
 
 Asynchronous projections introduce eventual consistency. Define how clients will experience it: return the accepted write plus an identifier, show pending state, read from the write store for a short read-your-writes path, or wait for a projection checkpoint when a workflow requires it. Projection handlers must be idempotent, track their source position, and support rebuilding from events or source state after a bug. Monitor projection lag and failures. CQRS is compatible with event sourcing but distinct from it: event sourcing stores domain events as the source of truth; CQRS only separates responsibilities and can use ordinary persisted state.
 

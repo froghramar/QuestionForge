@@ -5,7 +5,28 @@ technology: tech.system-design
 ---
 # Expected Answer
 
-A saga coordinates a business workflow that spans services by composing local transactions rather than using one distributed database transaction. In an order flow, the order service records `pending`, inventory reserves stock, and payment authorizes payment. If payment fails after reservation, the workflow asks inventory to release the reservation and marks the order failed. Those compensations are business operations, not literal rollback: a shipped parcel may need a return workflow rather than an impossible deletion.
+A saga coordinates a business workflow that spans services by composing local transactions rather than using one distributed database transaction.
+
+```mermaid
+sequenceDiagram
+    participant Orchestrator
+    participant Order
+    participant Inventory
+    participant Payment
+
+    Orchestrator->>Order: Create Pending Order
+    Order-->>Orchestrator: Success
+    Orchestrator->>Inventory: Reserve Stock
+    Inventory-->>Orchestrator: Success
+    Orchestrator->>Payment: Authorize Payment
+    Payment-->>Orchestrator: FAILURE
+    
+    Note over Orchestrator, Inventory: Compensation Phase
+    Orchestrator->>Inventory: Release Reservation
+    Orchestrator->>Order: Mark Order Failed
+```
+
+In an order flow, the order service records `pending`, inventory reserves stock, and payment authorizes payment. If payment fails after reservation, the workflow asks inventory to release the reservation and marks the order failed. Those compensations are business operations, not literal rollback: a shipped parcel may need a return workflow rather than an impossible deletion.
 
 With choreography, services subscribe to and publish events; it is loosely coupled but the workflow can become hard to see as participants grow. With orchestration, an order workflow service sends commands and tracks state; it adds a coordinator but centralizes visibility, timeouts, retries, and the compensation sequence. Either choice requires durable state, idempotent steps, correlation IDs, time limits, retries, and alerts for stuck workflows. A saga should expose intermediate state to users instead of pretending the whole operation is instantly atomic.
 
