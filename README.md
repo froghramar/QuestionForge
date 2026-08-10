@@ -17,7 +17,11 @@ QuestionForge is the Wikipedia of technical interview knowledge. It is a communi
 
 # Setup
 
-1. **Install Dependencies:**
+1. **Prerequisites:**
+   - Node.js 24.x or later
+   - npm 10.x or later
+
+2. **Install Dependencies:**
    ```bash
    npm install
    ```
