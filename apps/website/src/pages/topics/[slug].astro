@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
@@ -42,96 +42,80 @@ const sortedQuestions = topicQuestions.sort((a, b) =>
 	(diffOrder[a.data.difficulty] || 0) - (diffOrder[b.data.difficulty] || 0)
 );
 
-// Render concepts
-const renderedConcepts = await Promise.all(topicConcepts.map(async (concept) => {
-	const { Content } = await render(concept);
-	return { ...concept, Content };
-}));
-
 function getDifficultyClass(diff: string): string {
 	return `badge--${diff.toLowerCase()}`;
 }
 ---
 
-<Layout title={topic.data.title} description={topic.data.description || `Interview questions about ${topic.data.title}.`}>
-	<nav class="breadcrumbs" aria-label="Breadcrumb">
-		<a href="/topics">Topics</a>
-		<span class="breadcrumbs__separator">/</span>
-		{category && (
-			<>
-				<span style="color: var(--color-text-secondary);">{category.data.title}</span>
+<Layout wide={true} title={topic.data.title} description={topic.data.description || `Interview questions about ${topic.data.title}.`}>
+	<div class="layout-isolated">
+		<div class="layout-isolated__main">
+			<nav class="breadcrumbs" aria-label="Breadcrumb">
+				<a href="/topics">Topics</a>
 				<span class="breadcrumbs__separator">/</span>
-			</>
-		)}
-		<span class="breadcrumbs__current">{topic.data.title}</span>
-	</nav>
+				{category && (
+					<>
+						<span style="color: var(--color-text-secondary);">{category.data.title}</span>
+						<span class="breadcrumbs__separator">/</span>
+					</>
+				)}
+				<span class="breadcrumbs__current">{topic.data.title}</span>
+			</nav>
 
-	<header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-		<div>
-			<h1 class="page-header__title">{topic.data.title}</h1>
-			{topic.data.description && <p class="page-header__subtitle">{topic.data.description}</p>}
-		</div>
-		<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/topics/${topic.data.id.replace('topic.', '')}.md`} target="_blank" rel="noopener" class="filter-btn" style="text-decoration: none; font-size: 0.75rem;">
-			Edit Topic ✏️
-		</a>
-	</header>
-
-	{renderedConcepts.length > 0 && (
-		<section style="margin-bottom: 2.5rem;">
-			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-				<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0;">Key Concepts</h2>
-				<a href="https://github.com/froghramar/QuestionForge/tree/main/content/concepts" target="_blank" rel="noopener" style="font-size: 0.75rem; color: var(--color-text-secondary); text-decoration: none;">
-					+ Add Concept
+			<header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+				<div>
+					<h1 class="page-header__title">{topic.data.title}</h1>
+					{topic.data.description && <p class="page-header__subtitle">{topic.data.description}</p>}
+				</div>
+				<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/topics/${topic.data.id.replace('topic.', '')}.md`} target="_blank" rel="noopener" class="filter-btn" style="text-decoration: none; font-size: 0.75rem;">
+					Edit Topic ✏️
 				</a>
-			</div>
-			<div style="display: grid; gap: 0.75rem;">
-				{renderedConcepts.map(({ id, data, Content }) => (
-					<details class="collapsible">
-						<summary class="collapsible__trigger">
-							<span>{data.title}</span>
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
-						</summary>
-						<div class="collapsible__content prose">
-							<Content />
-							<div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border-default); text-align: right;">
-								<a href={`https://github.com/froghramar/QuestionForge/edit/main/content/concepts/${data.id.replace('concept.', '')}.md`} target="_blank" rel="noopener" style="font-size: 0.75rem; color: var(--color-text-secondary); text-decoration: none;">
-									Improve this concept on GitHub ✏️
-								</a>
-							</div>
-						</div>
-					</details>
-				))}
-			</div>
-		</section>
-	)}
+			</header>
 
-	<section>
-		<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 1rem;">
-			Questions <span style="font-weight: 400;">({sortedQuestions.length})</span>
-		</h2>
-		<div class="question-grid stagger-children">
-			{sortedQuestions.map((question) => {
-				const techs = questionTechMap.get(question.data.id) || [];
-				return (
-					<a href={`/questions/${question.id}`} class="card card--interactive">
-						<div class="card__header">
-							<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
-							<span class="question-card__time">
-								<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-								{question.data.estimated_time}m
-							</span>
-						</div>
-						<h3 class="card__title">{question.data.title}</h3>
-						<div class="card__meta">
-							<div class="question-card__techs">
-								{techs.map(tech => (
-									<span class="badge badge--tech">{tech}</span>
-								))}
-							</div>
-						</div>
-					</a>
-				);
-			})}
+			<section>
+				<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 1rem;">
+					Questions <span style="font-weight: 400;">({sortedQuestions.length})</span>
+				</h2>
+				<div class="question-grid stagger-children">
+					{sortedQuestions.map((question) => {
+						const techs = questionTechMap.get(question.data.id) || [];
+						return (
+							<a href={`/questions/${question.id}`} class="card card--interactive">
+								<div class="card__header">
+									<span class={`badge ${getDifficultyClass(question.data.difficulty)}`}>{question.data.difficulty}</span>
+									<span class="question-card__time">
+										<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+										{question.data.estimated_time}m
+									</span>
+								</div>
+								<h3 class="card__title">{question.data.title}</h3>
+								<div class="card__meta">
+									<div class="question-card__techs">
+										{techs.map(tech => (
+											<span class="badge badge--tech">{tech}</span>
+										))}
+									</div>
+								</div>
+							</a>
+						);
+					})}
+				</div>
+			</section>
 		</div>
-	</section>
+
+		<aside class="layout-isolated__side">
+			{topicConcepts.length > 0 && (
+				<section style="margin-top: 7rem;">
+					<h2 style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin: 0 0 1rem;">Key Concepts</h2>
+					<div style="display: grid; gap: 0.25rem;">
+						{topicConcepts.map((concept) => (
+							<a href={`/concepts/${concept.data.slug}`} class="site-nav__link" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: normal;">
+								{concept.data.title}
+							</a>
+						))}
+					</div>
+				</section>
+			)}
+		</aside>
+	</div>
 </Layout>

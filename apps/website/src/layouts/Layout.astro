@@ -7,9 +7,10 @@ import { Auth } from '../components/Auth';
 interface Props {
 	title: string;
 	description?: string;
+	wide?: boolean;
 }
 
-const { title, description = 'Open-source interview questions for developers. Static-first, community-driven.' } = Astro.props;
+const { title, description = 'Open-source interview questions for developers. Static-first, community-driven.', wide = false } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 function isActive(path: string): boolean {
@@ -100,7 +101,7 @@ function isActive(path: string): boolean {
 			</div>
 		</header>
 
-		<main class="site-main" data-pagefind-body>
+		<main class:list={['site-main', { 'site-main--wide': wide }]} data-pagefind-body>
 			<slot />
 		</main>
 
