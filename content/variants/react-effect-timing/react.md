@@ -7,6 +7,18 @@ technology: tech.react
 
 The difference lies in the **timing** of execution relative to the browser's paint cycle:
 
+```mermaid
+graph TD
+    Trigger[State Change / Trigger] --> Render[React Render Phase]
+    Render --> Commit[React Commit Phase / DOM Mutation]
+    Commit --> ULE[useLayoutEffect - Synchronous]
+    ULE --> Paint[Browser Paint]
+    Paint --> UE[useEffect - Asynchronous]
+    
+    style ULE fill:#d29922,stroke:#d29922,color:#000
+    style UE fill:#58a6ff,stroke:#58a6ff,color:#000
+```
+
 1.  **`useEffect` (Asynchronous)**: Runs **after** the browser has painted the screen. It is non-blocking and is the default choice for most side effects like data fetching, subscriptions, or logging.
 2.  **`useLayoutEffect` (Synchronous)**: Runs **after** React has mutated the DOM but **before** the browser paints the changes. It blocks the paint, allowing you to measure layout and re-render synchronously to prevent visual flickering.
 

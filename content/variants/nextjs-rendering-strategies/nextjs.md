@@ -8,6 +8,23 @@ technology: tech.nextjs
 
 Next.js offers several ways to render content, each suited for different use cases:
 
+```mermaid
+graph TD
+    User((User Request)) --> SSG{Is route static?}
+    SSG -- Yes --> BuildTime[Rendered at Build Time]
+    BuildTime --> Cache[(CDN Cache)]
+    Cache --> Response[Serve HTML]
+    
+    SSG -- No --> SSR{Real-time data?}
+    SSR -- Yes --> Server[Render on Server per Request]
+    Server --> Response
+    
+    SSG -- ISR --> CheckCache{Cache expired?}
+    CheckCache -- No --> Cache
+    CheckCache -- Yes --> Revalidate[Background Render]
+    Revalidate --> Cache
+```
+
 1.  **Static Site Generation (SSG):** HTML is generated at **build time**. This is the most performant method. In the **Pages Router**, this uses `getStaticProps`. In the **App Router (Next.js 13+)**, this is the default behavior for `fetch` requests unless opted out.
 2.  **Server-Side Rendering (SSR):** HTML is generated on **each request**. In the **Pages Router**, this uses `getServerSideProps`. In the **App Router**, you opt-in by setting `cache: 'no-store'` in `fetch` or using dynamic functions.
 3.  **Incremental Static Regeneration (ISR):** Allows you to update static pages **after build time**. Introduced in **Next.js 9.5**, it scales well for large sites.

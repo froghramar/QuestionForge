@@ -5,7 +5,26 @@ technology: tech.system-design
 ---
 # Expected Answer (TLS 1.3)
 
-HTTPS is HTTP over TLS. TLS establishes a secure channel: the client validates the server certificate chain and hostname, the peers negotiate parameters and perform ephemeral key agreement, and they derive traffic keys. After the handshake, TLS 1.3 uses authenticated encryption for records, providing confidentiality and integrity. The server is normally authenticated; client-certificate authentication is optional and used only in some systems.
+HTTPS is HTTP over TLS. TLS establishes a secure channel: the client validates the server certificate chain and hostname, the peers negotiate parameters and perform ephemeral key agreement, and they derive traffic keys.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    
+    Note over Client,Server: TCP Handshake completed
+    
+    Client->>Server: ClientHello (Supported Versions, Cipher Suites, Key Share)
+    Server->>Client: ServerHello (Selected Version/Cipher, Key Share, Certificate, Finished)
+    
+    Note over Client,Server: Keys Derived (Forward Secrecy)
+    
+    Client->>Server: Finished
+    
+    Note over Client,Server: Encrypted Application Data (HTTP)
+```
+
+After the handshake, TLS 1.3 uses authenticated encryption for records, providing confidentiality and integrity. The server is normally authenticated; client-certificate authentication is optional and used only in some systems.
 
 The certificate proves control through a trusted public-key infrastructure; it does not authorize a user or validate application input. Configure current protocol versions and cipher suites through a maintained TLS library or platform, renew certificates automatically, redirect HTTP to HTTPS, and set HSTS only after HTTPS is working everywhere. At a load balancer, TLS termination decrypts traffic there; the connection from the proxy to the application must still be protected according to the network threat model.
 

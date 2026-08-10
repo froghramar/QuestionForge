@@ -7,6 +7,28 @@ technology: tech.system-design
 
 While both techniques split large datasets, they operate at different levels:
 
+```mermaid
+graph TB
+    subgraph Partitioning [Vertical/Horizontal Partitioning]
+        direction TB
+        Server1[(Single Database Server)]
+        subgraph TableP [Large Table]
+            P1[Partition A]
+            P2[Partition B]
+            P3[Partition C]
+        end
+        Server1 --- TableP
+    end
+
+    subgraph Sharding [Sharding]
+        direction TB
+        App[Application Logic / Router]
+        App --> Shard1[(Shard 1 / Server A)]
+        App --> Shard2[(Shard 2 / Server B)]
+        App --> Shard3[(Shard 3 / Server C)]
+    end
+```
+
 - **Partitioning**: A database-level feature that splits a table into smaller pieces **within a single database instance**. It is usually transparent to the application.
 - **Sharding**: An architectural pattern that distributes data across **multiple independent database servers**. Each server (shard) holds a subset of the data.
 

@@ -5,7 +5,33 @@ technology: tech.kafka
 ---
 # Expected Answer
 
-Kafka stores records in append-only topic partitions. Each partition has a total order, but there is no total order across a topic's partitions. A record key is typically hashed to select a partition, so use the aggregate key—such as `orderId`—when events for that aggregate must remain ordered. Partitions also set the maximum useful consumer parallelism for one consumer group: only one member owns a given partition at a time. Extra consumers beyond the partition count are idle.
+Kafka stores records in append-only topic partitions. 
+
+```mermaid
+graph LR
+    subgraph Topic [Kafka Topic]
+        direction TB
+        P0[Partition 0]
+        P1[Partition 1]
+        P2[Partition 2]
+        P3[Partition 3]
+    end
+
+    subgraph GroupA [Consumer Group A]
+        C1[Consumer 1]
+        C2[Consumer 2]
+    end
+
+    P0 --> C1
+    P1 --> C1
+    P2 --> C2
+    P3 --> C2
+
+    style Topic fill:var(--color-surface-raised),stroke:var(--color-border-default)
+    style GroupA fill:var(--color-accent-subtle),stroke:var(--color-accent)
+```
+
+Each partition has a total order, but there is no total order across a topic's partitions. A record key is typically hashed to select a partition, so use the aggregate key—such as `orderId`—when events for that aggregate must remain ordered. Partitions also set the maximum useful consumer parallelism for one consumer group: only one member owns a given partition at a time. Extra consumers beyond the partition count are idle.
 
 Consumer groups allow independent applications to read the same topic while sharing work within each application. A group commits offsets to record its progress. Commit only after the business effect is durable; otherwise a crash can skip work. Committing after work gives at-least-once processing because a crash before commit repeats the record, so handlers need idempotency. Rebalances move partition ownership when members join, leave, or fail. A consumer must stop processing revoked partitions promptly and tolerate repeated records after its successor resumes.
 
